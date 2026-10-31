@@ -12,7 +12,8 @@
     "index": "node tools/build-index.mjs",
     "index:check": "node tools/build-index.mjs --check",
     "check": "npm run test:schema && npm run validate && npm run index:check",
-    "check:recipes": "node tools/check-recipe.mjs"
+    "check:recipes": "node tools/check-recipe.mjs",
+    "serve": "node tools/server.mjs"
   },
   "dependencies": {
     "ajv": "8.20.0",
