@@ -34,6 +34,8 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 17 | Seed: ArmorClaude / ArmorCodex plugin policy recipe | Slice 3 | planned |
 | 18 | Topic tags & recipe badges | Slice 3 | planned |
 | 19 | Public launch | Launch | planned |
+| 20 | aiq-demos recipes (9 community recipes) | Slice 4 | in-progress |
+| 21 | ArmorIQ restyle of the recipe browser | Slice 4 | in-progress |
 
 ## Already here
 
@@ -171,6 +173,35 @@ Badges on each recipe README (language, framework, product, tier, tested SDK ver
 **Done when:** every recipe README shows its badges from metadata, and changing metadata updates them.
 - [ ] Build it: `/develop topic tags & recipe badges`
 
+## Slice 4: aiq-demos recipes and the ArmorIQ browser
+
+### 20. aiq-demos recipes (9 community recipes) · in-progress
+Bring the nine demos from github.com/Naveen-6087/aiq-demos in as `community` recipes: filesystem notes, memory knowledge, cross MCP research, Postgres notes, crypto prices, GitHub write guard, LangChain weather (TS), Strands support desk (Python), CrewAI crypto crew (Python). Each runs offline, with the stand-in deciding from its own `policy.yaml`.
+**Done when:** all 11 recipes pass `npm run check` and `npm run check:recipes` with no keys, and the index lists them.
+spec [0003](../specs/0003-aiq-demos-recipes.md) · code in `recipes/sdk/typescript/{filesystem-notes,memory-knowledge,cross-mcp-research,postgres-notes,crypto-prices,github-write-guard}/`, `recipes/langchain/typescript/weather-agent/`, `recipes/strands/python/support-desk/`, `recipes/crewai/python/crypto-crew/`
+- [x] Design it (spec): `/architect aiq-demos recipes`
+- [x] Build it: `/develop aiq-demos recipes`
+  - [x] Taxonomy additions and the filesystem notes tracer, end to end
+  - [x] Remaining TypeScript SDK recipes (memory, cross MCP, Postgres, crypto, GitHub write guard)
+  - [x] LangChain weather recipe
+  - [x] Python lane: Strands support desk and CrewAI crypto crew
+  - [x] Index regenerated, all checks green
+- [ ] Verify it: `/check verify aiq-demos recipes`
+- [ ] Test it: `/test aiq-demos recipes`
+
+### 21. ArmorIQ restyle of the recipe browser · in-progress
+Rebuild the local recipe browser (`npm run serve`) in the ArmorIQ V5 design system, with filters, a Policy tab, and a run viewer that shows each call as allowed, held, or blocked.
+**Done when:** every surface uses `aq-*` tokens only, light and dark work, and all 11 recipes run from the browser with a timeline.
+spec [0004](../specs/0004-armoriq-recipe-browser.md) · code in `tools/server.mjs`, `tools/browser/`
+- [x] Design it (spec): `/architect armoriq recipe browser`
+- [x] Build it: `/develop armoriq recipe browser`
+  - [x] Static files, tokens, fonts, primitive classes
+  - [x] Rail, recipe view, tabs, Policy tab
+  - [x] Convention based run and the timeline viewer
+  - [x] Theme, a11y, path check, hand check in a real browser
+- [ ] Verify it: `/check verify armoriq recipe browser`
+- [ ] Test it: `/test armoriq recipe browser`
+
 ## Launch
 
 ### 19. Public launch
@@ -186,7 +217,7 @@ Out of scope for the launch, kept so the plan stays honest.
 - **Contributor recognition**: credits and author fields shown in the index
 - **Recipe request board**: pinned list of wanted language x framework gaps and good first issues
 - **More language lanes**: Go, Java, and others once demand or an SDK exists · needs a decision
-- **Remaining framework seeds**: Strands, Langflow, OpenAI and Anthropic raw client recipes
+- **Remaining framework seeds**: Langflow (Strands lands with feature 20), OpenAI and Anthropic raw client recipes
 
 ## Legend
 
