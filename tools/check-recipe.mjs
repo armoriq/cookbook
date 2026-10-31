@@ -47,7 +47,8 @@ function checkTypescript(id, dir) {
 }
 
 function checkPython(dir) {
-  const python = process.platform === 'win32' ? 'python' : 'python3';
+  // PYTHON overrides the interpreter, e.g. PYTHON=python3.12 when the default python3 is too new for a recipe.
+  const python = process.env.PYTHON ?? (process.platform === 'win32' ? 'python' : 'python3');
   const venvPython = join(dir, '.venv', process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python');
   if (!existsSync(venvPython)) run(python, ['-m', 'venv', '.venv'], dir);
   if (existsSync(join(dir, 'requirements.txt'))) run(venvPython, ['-m', 'pip', 'install', '-q', '-r', 'requirements.txt'], dir);

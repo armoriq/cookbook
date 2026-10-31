@@ -26,29 +26,44 @@ export class ArmorIQADK {
   async forUser(userEmail, { onEvent = () => {} } = {}) {
     const [role, limit] = REFUND_LIMITS[userEmail] ?? ['unknown_user', 0];
 
-    async function holdThenDecide(tool, reason) {
+    // Log contract lines (spec 0003) so the recipe browser can draw the run as a timeline.
+    const log = (line) => console.log(`[armoriq] ${line}`);
+
+    async function holdThenDecide(tool, reason, args) {
+      log(`check ${tool}: HELD (${reason})`);
+      log(`args ${tool}: ${JSON.stringify(args ?? {})}`);
       onEvent('hold', { tool, reason });
       await pause(800);
       if (process.env.OFFLINE_APPROVAL === 'reject') {
+        log(`hold ${tool}: REJECTED`);
         onEvent('rejected', { tool });
         return { armoriq_enforcement: { action: 'hold', outcome: 'rejected', reason } };
       }
+      log(`hold ${tool}: APPROVED`);
       onEvent('approved', { tool });
       return undefined;
     }
 
     async function beforeToolCallback({ tool, args }) {
       const name = tool.name;
-      if (READS.includes(name)) return undefined;
+      if (READS.includes(name)) {
+        log(`check ${name}: ALLOWED (reads-allowed)`);
+        return undefined;
+      }
       if (MONEY.includes(name)) {
         const amount = Number(args?.amount ?? 0);
-        if (amount <= limit) return undefined;
-        return holdThenDecide(name, `${money(amount)} exceeds the ${role} refund limit of ${money(limit)}`);
+        if (amount <= limit) {
+          log(`check ${name}: ALLOWED (${money(amount)} within the ${role} refund limit)`);
+          return undefined;
+        }
+        return holdThenDecide(name, `${money(amount)} exceeds the ${role} refund limit of ${money(limit)}`, args);
       }
-      if (ACCOUNT_CHANGES.includes(name)) return holdThenDecide(name, 'account changes need approval');
+      if (ACCOUNT_CHANGES.includes(name)) return holdThenDecide(name, 'account changes need approval', args);
       const reason = DESTRUCTIVE.includes(name)
         ? 'destructive operation, not available to agents'
         : 'no policy allows this tool (closed by default)';
+      log(`check ${name}: BLOCKED (${reason})`);
+      log(`args ${name}: ${JSON.stringify(args ?? {})}`);
       onEvent('block', { tool: name, reason });
       return { armoriq_enforcement: { action: 'block', reason } };
     }

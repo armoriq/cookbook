@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node agent.js",
     "demo:offline": "node --import ./offline/register.mjs agent.js",
-    "test:offline": "node offline/test.mjs"
+    "test:offline": "node offline/test.mjs",
+    "demo:browser": "node offline/test.mjs"
   },
   "dependencies": {
     "@armoriq/sdk": "^0.6.10",
