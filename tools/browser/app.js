@@ -361,6 +361,85 @@
     const body = readme.replace(/^\s*# [^\n]*\n/, '');
     const html = window.marked ? window.marked.parse(body) : `<pre>${esc(body)}</pre>`;
     panel.innerHTML = `<div class="markdown-body">${html}</div>`;
+    enhanceCodeBlocks(panel);
+  }
+
+  // ───────── code highlighting ─────────
+  const LANG_BY_EXT = {
+    js: 'javascript', mjs: 'javascript', cjs: 'javascript', jsx: 'javascript', ts: 'typescript', tsx: 'typescript',
+    py: 'python', json: 'json', yaml: 'yaml', yml: 'yaml', md: 'markdown', sh: 'bash', bash: 'bash',
+    sql: 'sql', toml: 'ini', ini: 'ini', css: 'css', html: 'xml', xml: 'xml', txt: 'plaintext',
+  };
+  const LANG_LABEL = { javascript: 'JavaScript', typescript: 'TypeScript', python: 'Python', json: 'JSON', yaml: 'YAML', markdown: 'Markdown', bash: 'Shell', sql: 'SQL', ini: 'Config', css: 'CSS', xml: 'HTML', plaintext: 'Text' };
+  const ALIAS = { js: 'javascript', ts: 'typescript', py: 'python', sh: 'bash', shell: 'bash', zsh: 'bash', console: 'bash', yml: 'yaml', env: 'ini', text: 'plaintext', txt: 'plaintext' };
+  const IDENT_LANGS = new Set(['javascript', 'typescript', 'python']);
+
+  function langForFile(f) {
+    const name = f.split('/').pop().toLowerCase();
+    if (name.startsWith('.env')) return 'ini';
+    if (name === 'dockerfile') return 'dockerfile';
+    if (name.startsWith('.git') || name === 'requirements.txt') return 'plaintext';
+    return LANG_BY_EXT[name.split('.').pop()] || 'plaintext';
+  }
+
+  // highlight.js colors keywords, strings, and declarations but leaves plain names alone.
+  // This pass colors the rest the way an editor does: calls, properties, types, variables.
+  function colorIdentifiers(html) {
+    let depth = 0;
+    return html
+      .split(/(<[^>]+>)/)
+      .map((part) => {
+        if (part.startsWith('<')) {
+          depth += part.startsWith('</') ? -1 : part.endsWith('/>') ? 0 : 1;
+          return part;
+        }
+        if (depth > 0) return part;
+        return part.replace(/(&[a-z#0-9]+;)|([A-Za-z_$][\w$]*)(?=(\s*\()?)/g, (m, ent, id, call, off, str) => {
+          if (ent) return ent;
+          const prev = str[off - 1];
+          const cls = call ? 'tok-fn' : prev === '.' ? 'tok-prop' : /^[A-Z][a-z]/.test(id) ? 'tok-type' : 'tok-var';
+          return `<span class="${cls}">${id}</span>`;
+        });
+      })
+      .join('');
+  }
+
+  function highlight(code, lang) {
+    const hl = window.hljs;
+    if (!hl || !lang || lang === 'plaintext' || !hl.getLanguage(lang)) return esc(code);
+    try {
+      const html = hl.highlight(code, { language: lang, ignoreIllegals: true }).value;
+      return IDENT_LANGS.has(lang) ? colorIdentifiers(html) : html;
+    } catch {
+      return esc(code);
+    }
+  }
+
+  // Dark editor blocks for code in the Guide: language label, copy button, colors.
+  function enhanceCodeBlocks(root) {
+    root.querySelectorAll('pre > code').forEach((code) => {
+      const pre = code.parentElement;
+      const raw = (code.className.match(/language-([\w-]+)/) || [])[1] || '';
+      const lang = ALIAS[raw] || raw || 'plaintext';
+      const text = code.textContent.replace(/\n$/, '');
+      code.innerHTML = highlight(text, lang);
+      code.classList.add('hljs');
+      const block = document.createElement('div');
+      block.className = 'code-block';
+      block.innerHTML = `<div class="code-block-head"><span class="code-lang">${esc(LANG_LABEL[lang] || raw || 'Text')}</span><button type="button" class="code-copy" data-copy>${icon('clipboard', 13)}<span>Copy</span></button></div>`;
+      pre.replaceWith(block);
+      block.appendChild(pre);
+    });
+  }
+
+  async function copyText(btn, text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      btn.querySelector('span').textContent = 'Copied';
+      setTimeout(() => (btn.querySelector('span').textContent = 'Copy'), 1500);
+    } catch {
+      btn.querySelector('span').textContent = 'Copy failed';
+    }
   }
 
   // Files
@@ -387,9 +466,12 @@
       });
       items.push(`<button type="button" class="tree-item" data-file="${esc(f)}" aria-current="${f === state.file}" style="padding-left:${0.5 + (parts.length - 1) * 0.875}rem">${icon('file', 13)}<span class="name">${esc(parts[parts.length - 1])}</span></button>`);
     }
-    panel.innerHTML = `<div class="files">
-      <div class="tree" role="list" aria-label="Recipe files">${items.join('')}</div>
-      <div class="code-pane"><div class="code-name" id="code-name"></div><pre class="code mono" id="code" tabindex="0"></pre></div>
+    panel.innerHTML = `<div class="files ide">
+      <div class="tree" role="list" aria-label="Recipe files"><div class="tree-head">Explorer</div>${items.join('')}</div>
+      <div class="code-pane">
+        <div class="code-tabbar"><span class="code-tab" id="code-name"></span><span class="code-tabbar-spacer"></span><span class="code-lang" id="code-lang"></span><button type="button" class="code-copy" data-copy-file>${icon('clipboard', 13)}<span>Copy</span></button></div>
+        <div class="code-scroll" tabindex="0"><div class="code-gutter mono" id="code-gutter" aria-hidden="true"></div><pre class="code mono hljs" id="code"></pre></div>
+      </div>
     </div>`;
     loadFile(state.file);
   }
@@ -399,11 +481,18 @@
     const name = $('#code-name');
     const code = $('#code');
     if (!name || !code) return;
-    name.textContent = f;
+    name.innerHTML = `<span class="code-tab-dot code-tab-dot--${langForFile(f)}"></span>${esc(f)}`;
     const id = state.selectedId;
     const res = await fetch(`/api/file/${encodeURI(id)}?file=${encodeURIComponent(f)}`);
     const text = await res.text();
-    if (state.selectedId === id && state.file === f && $('#code')) $('#code').textContent = text;
+    if (state.selectedId !== id || state.file !== f || !$('#code')) return;
+    const lang = langForFile(f);
+    state.fileText = text;
+    $('#code').innerHTML = highlight(text.replace(/\n$/, ''), lang);
+    $('#code-lang').textContent = LANG_LABEL[lang] || '';
+    const lines = text.replace(/\n$/, '').split('\n').length;
+    $('#code-gutter').textContent = Array.from({ length: lines }, (_, i) => i + 1).join('\n');
+    $('.code-scroll').scrollTop = 0;
   }
 
   // Policy
@@ -737,6 +826,10 @@
         history.replaceState(null, '', '#' + encodeURI(state.selectedId) + (state.tab !== 'overview' ? '/' + state.tab : ''));
         return renderTab();
       }
+      const cf = e.target.closest('button[data-copy-file]');
+      if (cf) return copyText(cf, state.fileText || '');
+      const cb = e.target.closest('button[data-copy]');
+      if (cb) return copyText(cb, cb.closest('.code-block').querySelector('code').textContent);
       const f = e.target.closest('button[data-file]');
       if (f) return loadFile(f.dataset.file);
       const seg = e.target.closest('button[data-approval]');
