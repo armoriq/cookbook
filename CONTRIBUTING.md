@@ -14,6 +14,7 @@ This guide covers what we accept, how to add a recipe, the checks your PR has to
 - [The recipe.yaml manifest](#the-recipeyaml-manifest)
 - [Writing the README](#writing-the-readme)
 - [Pull requests](#pull-requests)
+- [Demo video](#demo-video)
 - [How we review](#how-we-review)
 - [Official and community recipes](#official-and-community-recipes)
 - [Changes outside recipes](#changes-outside-recipes)
@@ -73,7 +74,8 @@ npm run serve            # http://localhost:3000
    npm run check:recipes <framework>/<language>/<slug>
    ```
 
-6. **Open a pull request** against `main`.
+6. **Record the [demo video](#demo-video)** of the live run, and write the scenario table.
+7. **Open a pull request** against `main` and fill in the PR template.
 
 If your recipe needs a framework, language, product, use case, outcome, service, or package that is not in `schema/taxonomy.yaml` yet, add it to that file in the same PR, with its label (and its note or description where the file asks for one).
 
@@ -197,11 +199,68 @@ npm run check
 npm run check:recipes <your recipe id>
 ```
 
-**PR description.** Say what the recipe shows, which outcomes the offline run demonstrates, and anything a reviewer should know (a known limitation, a split README, a new taxonomy value).
+**PR description.** Fill in the PR template. It asks for:
+
+- What the recipe shows, and anything a reviewer should know (a known limitation, a split README, a new taxonomy value).
+- The [demo video](#demo-video) link.
+- The scenario table: every scenario you recorded, what you typed, the outcome you expected, and where it appears in the video.
+
+A recipe PR that has no video or no scenario table is marked **needs demo** and is not reviewed until both are added.
 
 **Commits.** Clear messages in the imperative ("Add Strands support desk recipe"). We squash merge, so the PR title becomes the commit on `main`.
 
 **CI.** Every PR runs the metadata checks and builds and tests only the recipes it touches. Fork PRs run with read only permissions and no secrets, which is why the offline test has to stand on its own.
+
+## Demo video
+
+Every PR that adds a recipe, or changes how a recipe behaves, must include a screen recording of the agent running **live**, against the real ArmorIQ platform, on a commit from the PR.
+
+**Why we ask for it.** CI can only run the offline mode, where ArmorIQ, the model, and the MCP servers are stand ins. Reviewers don't have your keys or accounts, so they can't run your recipe live, and we don't want to rebuild every recipe before we merge it. The video is your proof that the live run works the way the README says. Reviewers check the video and CI together, and only spot-check the live run themselves.
+
+**What to record.** One video, usually 2 to 6 minutes:
+
+1. **Context, in the terminal.** The recipe folder, `git rev-parse --short HEAD` (the commit you're recording), and the ArmorIQ SDK version (`npm ls @armoriq/sdk` or `pip show armoriq-sdk`).
+2. **The policy.** `policy.yaml` open, and the same policy in the ArmorIQ dashboard.
+3. **Every scenario in your scenario table.** At least one for each outcome in `demonstrates`:
+   - `allow`: a tool call that goes through, and its result.
+   - `hold`: a call that is held, the approval request in the dashboard, then one run where it is approved and one where it is rejected.
+   - `block`: a call that is blocked, and the agent handling the block without crashing.
+   - `prompt-injection`: the planted instruction, and ArmorIQ stopping the action it asks for.
+   - `delegation`, `multi-server`, `audit-log`: the handoff, the calls across servers, or the log entries, shown the same way.
+4. **The audit trail.** The ArmorIQ dashboard showing the decisions from this run (same tools, same timestamps).
+5. **The offline run.** `npm run demo:offline` (or `python offline/demo.py`) to the end. Twenty seconds is enough.
+
+**Rules.**
+
+- **Show it, don't tell it.** The terminal output and the dashboard have to be readable. Use a large font and record at 1080p or higher. Narration or on screen captions are welcome but optional.
+- **No cuts inside a scenario.** You can cut between scenarios (to skip installs or waiting), but each scenario has to be one continuous take from the prompt to the outcome.
+- **Live means live.** No stand ins, mocked responses, or edited output in the live part. If a scenario only works offline, leave it out of the live part and say so in the PR.
+- **No secrets on screen.** Use keys you can revoke and revoke them afterwards. Don't `cat .env`, and hide or blur any key, token, email address, or private data before you upload.
+- **Re-record when behavior changes.** If review changes the agent code, the prompts, or the policy, record the affected scenarios again and link the new video. Typo fixes and README edits don't need a new recording.
+
+**Where to put it.** Drag the file (`.mp4` or `.mov`) into the PR description, where GitHub hosts it. If it's over GitHub's upload limit, link an unlisted YouTube video or a public Loom instead. The link must work without signing in and must stay up after the PR is merged. Don't commit video files to the repo.
+
+**Scenario table.** Add it to the PR description so a reviewer can jump straight to each scenario:
+
+| Scenario | What you typed or ran | Expected outcome | Timestamp |
+|---|---|---|---|
+| Read an open issue | `npm start -- "summarize issue 12"` | `list_issues` ALLOWED | 0:45 |
+| Delete a branch | `npm start -- "delete branch old-docs"` | `delete_branch` BLOCKED, agent explains why | 1:30 |
+| Merge a PR, approved | `npm start -- "merge PR 7"` | `merge_pull_request` HELD, then APPROVED | 2:10 |
+| Merge a PR, rejected | same, rejected in the dashboard | HELD, then REJECTED, agent stops cleanly | 3:05 |
+
+**Which PRs need one.**
+
+| Change | Video |
+|---|---|
+| New recipe | Required, every scenario |
+| Recipe code, prompt, or policy change | Required, the scenarios the change affects |
+| SDK or dependency upgrade in a recipe | Required, a short run of each outcome |
+| Recipe browser (`tools/browser/`, `tools/server.mjs`) | Required, the screens you changed |
+| README only, typo, taxonomy, or schema fixture | Not needed |
+| Split PRs for one recipe | Once, on the PR that makes the recipe runnable. The others link to it. |
+
+**If you can't record a live run** (for example, the service you integrate is invite only), say so in the PR and record everything except the live part. A maintainer decides whether to run it live or keep it at community tier with that limit stated in the README.
 
 ## How we review
 
@@ -212,13 +271,14 @@ A PR is merged when it has **one approving review** and every required check is 
 - `npm run check` passes.
 - `npm run check:recipes <id>` passes on a clean install.
 - `npm run demo:offline` (or `offline/demo.py`) shows the outcomes the manifest claims.
+- The [demo video](#demo-video) shows every scenario in the scenario table, live, on a commit from this PR, with the matching decisions in the ArmorIQ dashboard.
 
 **2. It is honest.**
 
 - Every tool call is checked by ArmorIQ before it executes. Nothing bypasses it.
 - The offline stand in reads `policy.yaml`, so the offline story matches the live one.
 - The README does not claim behavior the code does not have. Known limits are stated plainly.
-
+- The video matches the code: same prompts, same policy, same outcomes. A video that was edited to hide a failure, or recorded on code that is not in the PR, gets the PR closed.
 **3. It is safe to run.**
 
 - No secrets, no telemetry to third parties, no network calls in offline mode.
