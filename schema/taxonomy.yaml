@@ -152,6 +152,8 @@ outcomes:
     label: Prompt injection blocked
   audit-log:
     label: Audit log
+  multi-server:
+    label: One plan, several MCP servers
 
 services:
   armoriq:
@@ -164,10 +166,16 @@ services:
     label: Anthropic
   github:
     label: GitHub
+  coingecko:
+    label: CoinGecko
 
 packages:
-  # ArmorIQ packages only. The Python SDK goes in once its PyPI name is confirmed (spec 0002 follow-up).
+  # ArmorIQ packages only.
   "@armoriq/sdk":
     label: ArmorIQ SDK (TypeScript)
     ecosystem: npm
     language: typescript
+  "armoriq-sdk":
+    label: ArmorIQ SDK (Python)
+    ecosystem: pypi
+    language: python
