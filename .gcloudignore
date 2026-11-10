@@ -1,0 +1,4 @@
+# Unlike the gcloud default, keep .gitignore in the upload: the image's git ls-files needs it.
+.git
+.gcloudignore
+#!include:.gitignore
