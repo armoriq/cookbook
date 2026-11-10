@@ -1,0 +1,223 @@
+/* Inty v2 material, exported from https://inty-agent-chat.vercel.app/playground/inty-costumes by tools/inty/export.mjs. Do not edit by hand. */
+.ic2-root { overflow: visible; }
+@layer inty-utilities { .fill-aq-accent { fill: var(--color-aq-accent); } .fill-aq-accent-deep { fill: var(--color-aq-accent-deep); } .fill-aq-accent-soft { fill: var(--color-aq-accent-soft); } .fill-aq-bad { fill: var(--color-aq-bad); } .fill-aq-good { fill: var(--color-aq-good); } .fill-aq-info { fill: var(--color-aq-info); } .fill-aq-ink { fill: var(--color-aq-ink); } .fill-aq-ink-faint { fill: var(--color-aq-ink-faint); } .fill-aq-ink-muted { fill: var(--color-aq-ink-muted); } .fill-aq-ink-soft { fill: var(--color-aq-ink-soft); } .fill-aq-iris { fill: var(--color-aq-iris); } .fill-aq-surface { fill: var(--color-aq-surface); } .fill-aq-warn { fill: var(--color-aq-warn); } .fill-aq-warn-soft { fill: var(--color-aq-warn-soft); } .fill-aq-zebra { fill: var(--color-aq-zebra); } .stroke-aq-border-strong { stroke: var(--color-aq-border-strong); } .stroke-aq-good { stroke: var(--color-aq-good); } .stroke-aq-info { stroke: var(--color-aq-info); } .stroke-aq-ink { stroke: var(--color-aq-ink); } .stroke-aq-ink-muted { stroke: var(--color-aq-ink-muted); } .stroke-aq-ink-soft { stroke: var(--color-aq-ink-soft); } .stroke-aq-surface { stroke: var(--color-aq-surface); } .stroke-aq-warn { stroke: var(--color-aq-warn); } }
+.ic2-body { transform-box: view-box; transform-origin: 50px 92px; }
+.ic2-arm-l { transform-box: view-box; transform-origin: 12.5px 52px; }
+.ic2-arm-r { transform-box: view-box; transform-origin: 87.5px 52px; }
+.ic2-fb { transform-box: fill-box; transform-origin: center center; }
+.ic2-grain { mix-blend-mode: soft-light; pointer-events: none; }
+.ic2-s-surface { stop-color: var(--color-aq-surface); }
+.ic2-s-zebra { stop-color: var(--color-aq-zebra); }
+.ic2-s-ink { stop-color: var(--color-aq-ink); }
+.ic2-s-ink-soft { stop-color: var(--color-aq-ink-soft); }
+.ic2-s-ink-muted { stop-color: var(--color-aq-ink-muted); }
+.ic2-s-ink-faint { stop-color: var(--color-aq-ink-faint); }
+.ic2-s-info { stop-color: var(--color-aq-info); }
+.ic2-s-bad { stop-color: var(--color-aq-bad); }
+.ic2-blink { transform-box: fill-box; transform-origin: center center; animation: ic2-blink calc(4.6s * var(--t, 1)) infinite; }
+@keyframes ic2-blink { 0%, 94%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.1); } }
+.ic2-shadow { transform-box: fill-box; transform-origin: center center; }
+.ic2-shadow-hop { animation: ic2-shadow-hop calc(.9s * var(--t, 1)) infinite; }
+@keyframes ic2-shadow-hop { 0%, 100% { transform: scale(1); opacity: 1; animation-timing-function: ease-out; } 14% { transform: scale(1.06); opacity: 1; } 45% { transform: scale(0.72); opacity: 0.55; animation-timing-function: ease-in; } 76% { transform: scale(1.03); opacity: 1; } }
+.ic2-steps-always .ic2-walkbob { animation: ic2-bob calc(.3s * var(--t, 1)) ease-in-out infinite alternate; }
+@keyframes ic2-bob { 0% { transform: translateY(0px); } 100% { transform: translateY(-1.6px); } }
+.ic2-steps-always .ic2-foot-l, .ic2-steps-always .ic2-foot-r { animation: ic2-step calc(.6s * var(--t, 1)) ease-in-out infinite; }
+.ic2-steps-always .ic2-foot-r { animation-delay: calc(-.3s * var(--t, 1)); }
+@keyframes ic2-step { 0%, 50%, 100% { transform: translateY(0px); } 25% { transform: translateY(-4px); } }
+.ic2-steps-some .ic2-walkbob { animation-duration: ; animation-timing-function: ; animation-iteration-count: ; animation-direction: ; animation-fill-mode: ; animation-play-state: ; animation-name: ; animation-timeline: ; animation-range-start: ; animation-range-end: ; animation-delay: var(--wd, 0s); }
+.ic2-steps-some .ic2-foot-l { animation-duration: ; animation-timing-function: ; animation-iteration-count: ; animation-direction: ; animation-fill-mode: ; animation-play-state: ; animation-name: ; animation-timeline: ; animation-range-start: ; animation-range-end: ; animation-delay: var(--wd, 0s); }
+.ic2-steps-some .ic2-foot-r { animation-duration: ; animation-timing-function: ; animation-iteration-count: ; animation-direction: ; animation-fill-mode: ; animation-play-state: ; animation-name: ; animation-timeline: ; animation-range-start: ; animation-range-end: ; animation-delay: var(--wd, 0s); }
+@keyframes ic2-bob-some { 0%, 6.25%, 12.5%, 18.75%, 25%, 100% { transform: translateY(0px); } 3.1%, 9.4%, 15.6%, 21.9% { transform: translateY(-1.6px); } }
+@keyframes ic2-step-l { 0%, 6.25%, 12.5%, 18.75%, 25%, 100% { transform: translateY(0px); } 3.1%, 15.6% { transform: translateY(-4px); } }
+@keyframes ic2-step-r { 0%, 6.25%, 12.5%, 18.75%, 25%, 100% { transform: translateY(0px); } 9.4%, 21.9% { transform: translateY(-4px); } }
+.ic2-nod { animation: ic2-nod calc(2s * var(--t, 1)) ease-in-out infinite; }
+@keyframes ic2-nod { 0%, 30%, 60%, 100% { transform: rotate(4deg) translateY(0px); } 12%, 42% { transform: rotate(4deg) translateY(1.8px); } }
+.ic2-press { animation: ic2-press calc(2s * var(--t, 1)) ease-in-out infinite; }
+@keyframes ic2-press { 0%, 30%, 60%, 100% { transform: rotate(-146deg); } 12%, 42% { transform: rotate(-151deg); } }
+.ic2-wave { opacity: 0; animation: ic2-wave calc(1.6s * var(--t, 1)) linear infinite; }
+.ic2-wave-2 { animation-delay: calc(-.53s * var(--t, 1)); }
+.ic2-wave-3 { animation-delay: calc(-1.07s * var(--t, 1)); }
+@keyframes ic2-wave { 0% { transform: translate(18px); opacity: 0; } 25% { opacity: 0.9; } 85% { transform: translate(0px); opacity: 0.6; } 100% { transform: translate(-2px); opacity: 0; } }
+.ic2-led { animation: ic2-led calc(1.2s * var(--t, 1)) ease-in-out infinite alternate; }
+@keyframes ic2-led { 0% { opacity: 0.35; } 100% { opacity: 1; } }
+.ic2-ponder { animation: ic2-ponder calc(3.2s * var(--t, 1)) ease-in-out infinite alternate; }
+@keyframes ic2-ponder { 0% { transform: rotate(-2deg); } 100% { transform: rotate(2deg) translateY(-1px); } }
+.ic2-cheek { animation: ic2-cheek calc(.9s * var(--t, 1)) ease-in-out infinite alternate; }
+@keyframes ic2-cheek { 0% { transform: rotate(62deg); } 100% { transform: rotate(69deg); } }
+.ic2-node { transform-box: fill-box; transform-origin: center center; animation-duration: calc(4.4s * var(--t, 1)); animation-iteration-count: infinite; }
+.ic2-node-1 { animation-name: ic2-node-1; }
+.ic2-node-2 { animation-name: ic2-node-2; }
+.ic2-node-3 { animation-name: ic2-node-3; }
+@keyframes ic2-node-1 { 0% { transform: scale(0.3); opacity: 0; } 6% { transform: scale(1.18); opacity: 1; } 10%, 90% { transform: scale(1); opacity: 1; } 96%, 100% { transform: scale(1); opacity: 0; } }
+@keyframes ic2-node-2 { 0%, 20% { transform: scale(0.3); opacity: 0; } 26% { transform: scale(1.18); opacity: 1; } 30%, 90% { transform: scale(1); opacity: 1; } 96%, 100% { transform: scale(1); opacity: 0; } }
+@keyframes ic2-node-3 { 0%, 40% { transform: scale(0.3); opacity: 0; } 46% { transform: scale(1.18); opacity: 1; } 50%, 90% { transform: scale(1); opacity: 1; } 96%, 100% { transform: scale(1); opacity: 0; } }
+.ic2-link { stroke-dasharray: 1; stroke-dashoffset: 0; animation-duration: calc(4.4s * var(--t, 1)); animation-iteration-count: infinite; animation-timing-function: linear; }
+.ic2-link-1 { animation-name: ic2-link-1; }
+.ic2-link-2 { animation-name: ic2-link-2; }
+@keyframes ic2-link-1 { 0%, 8% { stroke-dashoffset: 1; opacity: 1; } 20%, 90% { stroke-dashoffset: 0; opacity: 1; } 96%, 100% { stroke-dashoffset: 0; opacity: 0; } }
+@keyframes ic2-link-2 { 0%, 28% { stroke-dashoffset: 1; opacity: 1; } 40%, 90% { stroke-dashoffset: 0; opacity: 1; } 96%, 100% { stroke-dashoffset: 0; opacity: 0; } }
+.ic2-plan-ok { opacity: 0; animation: ic2-plan-ok calc(4.4s * var(--t, 1)) infinite; }
+@keyframes ic2-plan-ok { 0%, 58% { opacity: 0; } 64%, 90% { opacity: 1; } 96%, 100% { opacity: 0; } }
+.ic2-ok { transform-box: fill-box; transform-origin: center center; opacity: 0; animation: ic2-ok calc(4.4s * var(--t, 1)) infinite; }
+@keyframes ic2-ok { 0%, 60% { transform: scale(0.3); opacity: 0; } 66% { transform: scale(1.2); opacity: 1; } 70%, 90% { transform: scale(1); opacity: 1; } 96%, 100% { transform: scale(1); opacity: 0; } }
+.ic2-sweep { animation: ic2-sweep calc(2.8s * var(--t, 1)) ease-in-out infinite; }
+@keyframes ic2-sweep { 0%, 100% { transform: rotate(50deg); } 50% { transform: rotate(84deg); } }
+.ic2-look-search { animation: ic2-look-search calc(2.8s * var(--t, 1)) ease-in-out infinite; }
+@keyframes ic2-look-search { 0%, 100% { transform: translate(2px, 4px); } 50% { transform: translate(-1px, 1px); } }
+.ic2-snoop { animation: ic2-snoop calc(2.8s * var(--t, 1)) ease-in-out infinite; }
+@keyframes ic2-snoop { 0%, 100% { transform: rotate(-1deg); } 50% { transform: rotate(-3.5deg) translateY(0.6px); } }
+.ic2-find { transform-box: fill-box; transform-origin: center center; opacity: 0; animation: ic2-find calc(2.8s * var(--t, 1)) infinite; }
+@keyframes ic2-find { 0%, 42% { transform: scale(0.4) rotate(0deg); opacity: 0; } 50% { transform: scale(1.2) rotate(45deg); opacity: 1; } 62%, 100% { transform: scale(0.6) rotate(90deg); opacity: 0; } }
+.ic2-scan { animation: ic2-scan calc(5.2s * var(--t, 1)) linear infinite; }
+@keyframes ic2-scan { 0% { transform: translate(-3px, 2px); } 19% { transform: translate(3px, 2px); } 21% { transform: translate(-3px, 3px); } 40% { transform: translate(3px, 3px); } 42% { transform: translate(-3px, 4px); } 61% { transform: translate(3px, 4px); } 63% { transform: translate(-3px, 5px); } 80% { transform: translate(3px, 5px); } 86%, 94% { transform: translate(0px); } 100% { transform: translate(-3px, 2px); } }
+.ic2-readbar { animation: ic2-readbar calc(5.2s * var(--t, 1)) infinite; }
+@keyframes ic2-readbar { 0%, 19% { transform: translateY(0px); } 21%, 40% { transform: translateY(5px); } 42%, 61% { transform: translateY(10px); } 63%, 100% { transform: translateY(15px); } }
+.ic2-flip { transform-box: fill-box; transform-origin: center top; animation: ic2-flip calc(5.2s * var(--t, 1)) infinite; }
+@keyframes ic2-flip { 0%, 84% { transform: scaleY(1); opacity: 1; animation-timing-function: ease-in; } 91% { transform: translateY(-1.5px) scaleY(0.04); opacity: 1; } 92%, 99.9% { transform: scaleY(0.04); opacity: 0; } 100% { transform: scaleY(1); opacity: 1; } }
+.ic2-breath { animation: ic2-breath calc(4s * var(--t, 1)) ease-in-out infinite; }
+@keyframes ic2-breath { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.012); } }
+.ic2-ln { stroke-dasharray: 1; stroke-dashoffset: 0; animation-duration: calc(4.6s * var(--t, 1)); animation-iteration-count: infinite; animation-timing-function: linear; }
+.ic2-ln-1 { animation-name: ic2-ln-1; }
+.ic2-ln-2 { animation-name: ic2-ln-2; }
+.ic2-ln-3 { animation-name: ic2-ln-3; }
+.ic2-ln-4 { animation-name: ic2-ln-4; }
+@keyframes ic2-ln-1 { 0% { stroke-dashoffset: 1; opacity: 1; } 20%, 90% { stroke-dashoffset: 0; opacity: 1; } 96%, 100% { stroke-dashoffset: 0; opacity: 0; } }
+@keyframes ic2-ln-2 { 0%, 24% { stroke-dashoffset: 1; opacity: 1; } 44%, 90% { stroke-dashoffset: 0; opacity: 1; } 96%, 100% { stroke-dashoffset: 0; opacity: 0; } }
+@keyframes ic2-ln-3 { 0%, 48% { stroke-dashoffset: 1; opacity: 1; } 56%, 90% { stroke-dashoffset: 0; opacity: 1; } 96%, 100% { stroke-dashoffset: 0; opacity: 0; } }
+@keyframes ic2-ln-4 { 0%, 60% { stroke-dashoffset: 1; opacity: 1; } 72%, 90% { stroke-dashoffset: 0; opacity: 1; } 96%, 100% { stroke-dashoffset: 0; opacity: 0; } }
+.ic2-pen { transform: translate(60px, 66px); animation: ic2-pen calc(4.6s * var(--t, 1)) infinite; }
+@keyframes ic2-pen { 0% { transform: translate(36.5px, 70px); animation-timing-function: linear; } 5% { transform: translate(42.4px, 69.2px); animation-timing-function: linear; } 10% { transform: translate(48.2px, 70.6px); animation-timing-function: linear; } 15% { transform: translate(54.1px, 69.3px); animation-timing-function: linear; } 20% { transform: translate(60px, 70px); } 24% { transform: translate(36.5px, 74.5px); animation-timing-function: linear; } 30% { transform: translate(42.8px, 73.7px); animation-timing-function: linear; } 37% { transform: translate(50.2px, 75.1px); animation-timing-function: linear; } 44% { transform: translate(57.5px, 74.5px); } 48% { transform: translate(37px, 78.5px); animation-timing-function: linear; } 51% { transform: translate(39.3px, 80.6px); animation-timing-function: linear; } 56% { transform: translate(43.8px, 76px); } 60% { transform: translate(45.5px, 78.8px); animation-timing-function: linear; } 66% { transform: translate(51.5px, 78px); animation-timing-function: linear; } 72% { transform: translate(57.5px, 78.8px); } 80%, 94% { transform: translate(60px, 66px); } 100% { transform: translate(36.5px, 70px); } }
+.ic2-follow { animation: ic2-follow calc(4.6s * var(--t, 1)) infinite; }
+@keyframes ic2-follow { 0% { transform: translate(-3px, 3px); animation-timing-function: linear; } 20% { transform: translate(2px, 3px); } 24% { transform: translate(-3px, 4px); animation-timing-function: linear; } 44% { transform: translate(2px, 4px); } 48%, 56% { transform: translate(-2px, 5px); } 60% { transform: translate(-1px, 5px); animation-timing-function: linear; } 72% { transform: translate(2px, 5px); } 80%, 94% { transform: translate(1px); } 100% { transform: translate(-3px, 3px); } }
+.ic2-press-arm { animation: ic2-press-arm calc(2.6s * var(--t, 1)) infinite; }
+@keyframes ic2-press-arm { 0% { transform: rotate(-100deg); animation-timing-function: ease-in-out; } 25% { transform: rotate(-150deg); animation-timing-function: cubic-bezier(0.6, 0, 1, 1); } 35% { transform: rotate(-64deg); } 50% { transform: rotate(-64deg); animation-timing-function: ease-out; } 64%, 100% { transform: rotate(-100deg); } }
+.ic2-lean { animation: ic2-lean calc(2.6s * var(--t, 1)) infinite; }
+@keyframes ic2-lean { 0%, 25% { transform: rotate(-1deg); animation-timing-function: cubic-bezier(0.6, 0, 1, 1); } 35%, 50% { transform: rotate(1.5deg) translateY(0.4px); animation-timing-function: ease-out; } 64%, 100% { transform: rotate(-1deg); } }
+.ic2-dome { transform-box: fill-box; transform-origin: center bottom; animation: ic2-dome calc(2.6s * var(--t, 1)) infinite; }
+@keyframes ic2-dome { 0%, 34% { transform: translateY(0px) scaleY(1); } 36%, 50% { transform: translateY(1.4px) scaleY(0.72); } 58%, 100% { transform: translateY(0px) scaleY(1); } }
+.ic2-on { opacity: 0; animation: ic2-on calc(2.6s * var(--t, 1)) infinite; }
+@keyframes ic2-on { 0%, 35% { opacity: 0; } 36%, 90% { opacity: 1; } 97%, 100% { opacity: 0; } }
+.ic2-ring { transform-box: fill-box; transform-origin: center center; opacity: 0; animation: ic2-ring calc(2.6s * var(--t, 1)) ease-out infinite; }
+@keyframes ic2-ring { 0%, 35% { transform: scale(0.6); opacity: 0; } 37% { transform: scale(0.8); opacity: 0.9; } 72%, 100% { transform: scale(2); opacity: 0; } }
+.ic2-sway { animation: ic2-sway calc(2.8s * var(--t, 1)) ease-in-out infinite alternate; }
+@keyframes ic2-sway { 0% { transform: rotate(-1.5deg); } 100% { transform: rotate(1.5deg); } }
+.ic2-sign-arm { animation: ic2-sign-arm calc(1.4s * var(--t, 1)) ease-in-out infinite alternate; }
+@keyframes ic2-sign-arm { 0% { transform: rotate(-167deg); } 100% { transform: rotate(-158deg); } }
+.ic2-sign { transform-box: view-box; transform-origin: 92px 40px; animation: ic2-sign calc(1.4s * var(--t, 1)) ease-in-out infinite alternate; }
+@keyframes ic2-sign { 0% { transform: rotate(-3deg); } 100% { transform: rotate(4deg) translateY(-1px); } }
+.ic2-tap { transform-box: fill-box; transform-origin: left bottom; animation: ic2-tap calc(.9s * var(--t, 1)) ease-out infinite; }
+@keyframes ic2-tap { 0%, 45%, 100% { transform: rotate(0deg); } 20% { transform: rotate(-16deg); } }
+.ic2-dust { opacity: 0; animation: ic2-dust calc(.9s * var(--t, 1)) ease-out infinite; }
+@keyframes ic2-dust { 0%, 40% { transform: translate(0px) scale(0.6); opacity: 0; } 45% { opacity: 0.7; } 80%, 100% { transform: translate(-5px, -3px) scale(1.3); opacity: 0; } }
+.ic2-glance { animation: ic2-glance calc(3.6s * var(--t, 1)) ease-in-out infinite; }
+@keyframes ic2-glance { 0%, 55% { transform: translate(0px); } 62%, 85% { transform: translate(4px, 4px); } 92%, 100% { transform: translate(0px); } }
+.ic2-sigh { animation: ic2-sigh calc(4.2s * var(--t, 1)) ease-in-out infinite; }
+@keyframes ic2-sigh { 0%, 100% { transform: translateY(2px) rotate(-3deg) scaleY(0.95); } 50% { transform: translateY(3.5px) rotate(-3deg) scaleY(0.93); } }
+.ic2-dangle { animation: ic2-dangle calc(3s * var(--t, 1)) ease-in-out infinite alternate; }
+@keyframes ic2-dangle { 0% { transform: rotate(22deg); } 100% { transform: rotate(30deg); } }
+.ic2-zap { transform-box: fill-box; transform-origin: center center; opacity: 0; animation: ic2-zap calc(2.4s * var(--t, 1)) infinite; }
+@keyframes ic2-zap { 0%, 70% { transform: scale(0.5); opacity: 0; } 72% { transform: scale(1); opacity: 1; } 76% { transform: scale(0.8); opacity: 0.4; } 78% { transform: scale(1.1); opacity: 1; } 86%, 100% { transform: scale(1.4); opacity: 0; } }
+.ic2-smoke { transform-box: fill-box; transform-origin: center center; opacity: 0; animation: ic2-smoke calc(3s * var(--t, 1)) ease-out infinite; }
+.ic2-smoke-2 { animation-delay: calc(-1.5s * var(--t, 1)); }
+@keyframes ic2-smoke { 0% { transform: translate(0px) scale(0.5); opacity: 0; } 20% { opacity: 0.55; } 100% { transform: translate(4px, -20px) scale(1.8); opacity: 0; } }
+.ic2-cloud { animation: ic2-cloud calc(3s * var(--t, 1)) ease-in-out infinite alternate; }
+@keyframes ic2-cloud { 0% { transform: translate(-2px); } 100% { transform: translate(2px); } }
+.ic2-drop { opacity: 0; animation: ic2-drop calc(1.1s * var(--t, 1)) ease-in infinite; }
+.ic2-drop-2 { animation-delay: calc(-.37s * var(--t, 1)); }
+.ic2-drop-3 { animation-delay: calc(-.74s * var(--t, 1)); }
+@keyframes ic2-drop { 0% { transform: translateY(0px); opacity: 0; } 15% { opacity: 1; } 80% { transform: translateY(13px); opacity: 0.9; } 100% { transform: translateY(15px); opacity: 0; } }
+.ic2-breathe { animation: ic2-breathe calc(4s * var(--t, 1)) ease-in-out infinite; }
+@keyframes ic2-breathe { 0%, 100% { transform: rotate(3deg) scaleY(1); } 50% { transform: rotate(3deg) scaleY(1.035); } }
+.ic2-bubble { transform-box: fill-box; transform-origin: left center; animation: ic2-bubble calc(4s * var(--t, 1)) ease-in-out infinite; }
+@keyframes ic2-bubble { 0%, 100% { transform: scale(0.25); } 50% { transform: scale(1); } }
+.ic2-pom { animation: ic2-pom calc(2s * var(--t, 1)) ease-in-out infinite alternate; }
+@keyframes ic2-pom { 0% { transform: translate(-1px); } 100% { transform: translate(1.5px, 1px); } }
+.ic2-z { transform-box: fill-box; transform-origin: center center; opacity: 0; animation: ic2-z calc(3s * var(--t, 1)) ease-out infinite; }
+.ic2-z-2 { animation-delay: calc(-1s * var(--t, 1)); }
+.ic2-z-3 { animation-delay: calc(-2s * var(--t, 1)); }
+@keyframes ic2-z { 0% { transform: translate(0px) scale(0.6) rotate(-8deg); opacity: 0; } 20% { opacity: 1; } 100% { transform: translate(16px, -26px) scale(1.15) rotate(8deg); opacity: 0; } }
+.ic2-hop { animation: ic2-hop calc(.9s * var(--t, 1)) infinite; }
+@keyframes ic2-hop { 0%, 100% { transform: translateY(0px) scaleY(1); animation-timing-function: ease-out; } 14% { transform: translateY(0px) scaleY(0.93); animation-timing-function: ease-out; } 45% { transform: translateY(-9px) scaleY(1.04); animation-timing-function: ease-in; } 76% { transform: translateY(0px) scaleY(0.97); } }
+.ic2-wave-l { animation: ic2-wave-l calc(.45s * var(--t, 1)) ease-in-out infinite alternate; }
+@keyframes ic2-wave-l { 0% { transform: rotate(148deg); } 100% { transform: rotate(170deg); } }
+.ic2-wave-r { animation: ic2-wave-r calc(.45s * var(--t, 1)) ease-in-out infinite alternate; }
+@keyframes ic2-wave-r { 0% { transform: rotate(-148deg); } 100% { transform: rotate(-170deg); } }
+.ic2-horn { transform-box: fill-box; transform-origin: left center; animation: ic2-horn calc(.9s * var(--t, 1)) infinite; }
+@keyframes ic2-horn { 0%, 18% { transform: scaleX(0.14); animation-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1.2); } 42%, 66% { transform: scaleX(1); animation-timing-function: ease-in; } 92%, 100% { transform: scaleX(0.14); } }
+.ic2-confetti { transform-box: fill-box; transform-origin: center center; opacity: 0; animation: ic2-confetti calc(1.9s * var(--t, 1)) ease-out infinite; }
+@keyframes ic2-confetti { 0% { transform: translate(0px) rotate(0deg) scaleX(1); opacity: 0; } 8% { opacity: 1; } 25% { transform: translate(calc(var(--dx) * .6),calc(var(--dy) * .8)) rotate(calc(var(--r) * .5)) scaleX(-1); } 55% { transform: translate(var(--dx),var(--dy)) rotate(var(--r)) scaleX(1); opacity: 1; } 80% { transform: translate(var(--dx),calc(var(--dy) + 16px)) rotate(calc(var(--r) * 1.5)) scaleX(-1); opacity: 0.8; } 100% { transform: translate(var(--dx),calc(var(--dy) + 28px)) rotate(calc(var(--r) * 2)) scaleX(1); opacity: 0; } }
+.ic2-bounce { animation: ic2-bounce calc(.6s * var(--t, 1)) ease-in-out infinite alternate; }
+@keyframes ic2-bounce { 0% { transform: translateY(0px); } 100% { transform: translateY(-2px); } }
+.ic2-hi { animation: ic2-hi calc(.32s * var(--t, 1)) ease-in-out infinite alternate; }
+@keyframes ic2-hi { 0% { transform: rotate(-152deg); } 100% { transform: rotate(-118deg); } }
+.ic2-pop { transform-box: view-box; transform-origin: 98px 6px; opacity: 0; animation: ic2-pop calc(2.6s * var(--t, 1)) infinite; }
+@keyframes ic2-pop { 0% { transform: scale(0.6); opacity: 0; animation-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1.3); } 10% { transform: scale(1); opacity: 1; } 82% { transform: scale(1); opacity: 1; } 92%, 100% { transform: scale(0.92); opacity: 0; } }
+.ic2-shake-arm { animation: ic2-shake-arm calc(2s * var(--t, 1)) infinite; }
+@keyframes ic2-shake-arm { 0%, 32%, 100% { transform: rotate(-155deg); } 5%, 15%, 25% { transform: rotate(-147deg); } 10%, 20%, 30% { transform: rotate(-162deg); } }
+.ic2-env { transform-box: view-box; transform-origin: 94px 40px; animation: ic2-env calc(2s * var(--t, 1)) infinite; }
+@keyframes ic2-env { 0%, 32%, 100% { transform: rotate(0deg); } 5%, 15%, 25% { transform: rotate(7deg); } 10%, 20%, 30% { transform: rotate(-7deg); } }
+.ic2-ping { transform-box: fill-box; transform-origin: center center; animation: ic2-ping calc(1.2s * var(--t, 1)) ease-out infinite; }
+@keyframes ic2-ping { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(2.2); opacity: 0; } }
+.ic2-fall { opacity: 0; animation: ic2-fall calc(2.4s * var(--t, 1)) infinite; }
+@keyframes ic2-fall { 0% { transform: translateY(-58px) rotate(-14deg); opacity: 0; animation-timing-function: cubic-bezier(0.5, 0, 1, 1); } 8% { opacity: 1; } 44% { transform: translate(0px) rotate(0deg); } 50% { transform: translateY(1.5px) rotate(0deg); } 56%, 78% { transform: translate(0px) rotate(0deg); opacity: 1; } 92%, 100% { transform: translateY(10px) rotate(0deg); opacity: 0; } }
+.ic2-catch { animation: ic2-catch calc(2.4s * var(--t, 1)) infinite; }
+@keyframes ic2-catch { 0%, 43%, 60%, 100% { transform: scaleY(1); } 48% { transform: scaleY(0.95) translateY(0.6px); } }
+.ic2-catch-look { animation: ic2-catch-look calc(2.4s * var(--t, 1)) ease-in-out infinite; }
+@keyframes ic2-catch-look { 0%, 10% { transform: translateY(-5px); } 44%, 85% { transform: translateY(3px); } 100% { transform: translateY(-5px); } }
+.ic2-arrow-bob { animation: ic2-arrow-bob calc(.8s * var(--t, 1)) ease-in-out infinite alternate; }
+@keyframes ic2-arrow-bob { 0% { transform: translateY(-2px); } 100% { transform: translateY(2px); } }
+.ic2-point { animation: ic2-point calc(.5s * var(--t, 1)) ease-in-out infinite alternate; }
+@keyframes ic2-point { 0% { transform: rotate(-122deg); } 100% { transform: rotate(-114deg); } }
+.ic2-talk { transform-box: fill-box; transform-origin: center center; animation: ic2-talk calc(1.1s * var(--t, 1)) infinite; }
+@keyframes ic2-talk { 0%, 100% { transform: scaleY(0.35); } 18% { transform: scaleY(1); } 32% { transform: scaleY(0.5); } 50% { transform: scaleY(0.9); } 66% { transform: scaleY(0.3); } 82% { transform: scaleY(0.8); } }
+.ic2-bar { transform-box: fill-box; transform-origin: center bottom; animation: ic2-bar calc(1s * var(--t, 1)) ease-in-out infinite alternate; }
+@keyframes ic2-bar { 0% { transform: scaleY(0.88); } 100% { transform: scaleY(1.05); } }
+.ic2-beam { transform-box: view-box; transform-origin: 116px 22px; animation: ic2-beam calc(3s * var(--t, 1)) ease-in-out infinite; }
+@keyframes ic2-beam { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg); } }
+.ic2-pan-l { animation: ic2-pan-l calc(3s * var(--t, 1)) ease-in-out infinite; }
+@keyframes ic2-pan-l { 0%, 100% { transform: translateY(2.3px); } 50% { transform: translateY(-2.3px); } }
+.ic2-pan-r { animation: ic2-pan-r calc(3s * var(--t, 1)) ease-in-out infinite; }
+@keyframes ic2-pan-r { 0%, 100% { transform: translateY(-2.3px); } 50% { transform: translateY(2.3px); } }
+.ic2-weigh-look { animation: ic2-weigh-look calc(3s * var(--t, 1)) ease-in-out infinite; }
+@keyframes ic2-weigh-look { 0%, 100% { transform: translate(3px, 1px); } 50% { transform: translate(4px, -1px); } }
+.ic2-hit { transform-box: fill-box; transform-origin: center center; opacity: 0; animation: ic2-hit calc(1.6s * var(--t, 1)) infinite; }
+@keyframes ic2-hit { 0%, 36% { transform: scale(0.4); opacity: 0; } 40% { transform: scale(1.15); opacity: 1; } 52%, 100% { transform: scale(1.5); opacity: 0; } }
+.ic2-incoming { opacity: 0; animation: ic2-incoming calc(1.6s * var(--t, 1)) infinite; }
+@keyframes ic2-incoming { 0% { transform: translate(40px) rotate(0deg); opacity: 0; animation-timing-function: cubic-bezier(0.5, 0, 1, 1); } 10% { opacity: 1; } 38% { transform: translate(0px) rotate(0deg); animation-timing-function: ease-out; } 52% { transform: translate(12px, -9px) rotate(40deg); opacity: 1; } 74%, 100% { transform: translate(26px, 6px) rotate(110deg); opacity: 0; } }
+.ic2-halt { transform-box: view-box; transform-origin: 94px 40px; animation: ic2-halt calc(1.6s * var(--t, 1)) infinite; }
+@keyframes ic2-halt { 0%, 37%, 60%, 100% { transform: rotate(0deg); } 42% { transform: rotate(-5deg); } 50% { transform: rotate(2deg); } }
+.ic2-key-l { transform-box: view-box; transform-origin: 92px 29px; animation: ic2-key-l calc(2.8s * var(--t, 1)) infinite; }
+@keyframes ic2-key-l { 0%, 36% { transform: rotate(0deg) translate(0px); } 38% { transform: rotate(-2deg) translate(-0.5px); } 40% { transform: rotate(2deg) translate(0.5px); } 48%, 86% { transform: rotate(-14deg) translate(-3px, 2px); } 96%, 100% { transform: rotate(0deg) translate(0px); } }
+.ic2-key-r { transform-box: view-box; transform-origin: 114px 29px; animation: ic2-key-r calc(2.8s * var(--t, 1)) infinite; }
+@keyframes ic2-key-r { 0%, 36% { transform: rotate(0deg) translate(0px); } 38% { transform: rotate(2deg) translate(0.5px); } 40% { transform: rotate(-2deg) translate(-0.5px); } 48%, 86% { transform: rotate(24deg) translate(5px, 7px); } 96%, 100% { transform: rotate(0deg) translate(0px); } }
+.ic2-crack { opacity: 0; animation: ic2-crack calc(2.8s * var(--t, 1)) infinite; }
+@keyframes ic2-crack { 0%, 34% { opacity: 0; } 36%, 46% { opacity: 1; } 48%, 100% { opacity: 0; } }
+.ic2-dull { opacity: 0; animation: ic2-dull calc(2.8s * var(--t, 1)) infinite; }
+@keyframes ic2-dull { 0%, 46% { opacity: 0; } 54%, 86% { opacity: 0.55; } 96%, 100% { opacity: 0; } }
+.ic2-xbadge { transform-box: fill-box; transform-origin: center center; opacity: 0; animation: ic2-xbadge calc(2.8s * var(--t, 1)) infinite; }
+@keyframes ic2-xbadge { 0%, 46% { transform: scale(0.3); opacity: 0; } 52% { transform: scale(1.2); opacity: 1; } 56%, 86% { transform: scale(1); opacity: 1; } 94%, 100% { transform: scale(0.8); opacity: 0; } }
+.ic2-rewind { transform-box: view-box; transform-origin: 100px 18px; animation: ic2-rewind calc(1.8s * var(--t, 1)) infinite; }
+@keyframes ic2-rewind { 0% { transform: rotate(0deg); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); } 60%, 100% { transform: rotate(-360deg); } }
+.ic2-beckon { animation: ic2-beckon calc(.7s * var(--t, 1)) ease-in-out infinite alternate; }
+@keyframes ic2-beckon { 0% { transform: rotate(-104deg); } 100% { transform: rotate(-90deg); } }
+.ic2-signswing { transform-box: view-box; transform-origin: 113.7px 8px; animation: ic2-signswing calc(2.4s * var(--t, 1)) ease-in-out infinite alternate; }
+@keyframes ic2-signswing { 0% { transform: rotate(-2deg); } 100% { transform: rotate(2deg); } }
+.ic2-lean-r { animation: ic2-lean-r calc(1.4s * var(--t, 1)) ease-in-out infinite alternate; }
+@keyframes ic2-lean-r { 0% { transform: rotate(1deg); } 100% { transform: rotate(3.5deg); } }
+.ic2-hg { transform-box: view-box; transform-origin: 104px 74px; animation: ic2-hg calc(3.6s * var(--t, 1)) infinite; }
+@keyframes ic2-hg { 0%, 86% { transform: rotate(0deg); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); } 100% { transform: rotate(180deg); } }
+.ic2-sand-top { transform-box: fill-box; transform-origin: center bottom; animation: ic2-sand-top calc(3.6s * var(--t, 1)) linear infinite; }
+@keyframes ic2-sand-top { 0% { transform: scaleY(1); } 84%, 100% { transform: scaleY(0.04); } }
+.ic2-sand-bot { transform-box: fill-box; transform-origin: center bottom; animation: ic2-sand-bot calc(3.6s * var(--t, 1)) linear infinite; }
+@keyframes ic2-sand-bot { 0% { transform: scaleY(0.04); } 84%, 100% { transform: scaleY(1); } }
+.ic2-stream { animation: ic2-stream calc(3.6s * var(--t, 1)) infinite; }
+@keyframes ic2-stream { 0%, 82% { opacity: 1; } 84%, 100% { opacity: 0; } }
+.ic2-bolt { opacity: 0; animation: ic2-bolt calc(1.6s * var(--t, 1)) infinite; }
+@keyframes ic2-bolt { 0% { transform: translate(36px) rotate(0deg); opacity: 0; animation-timing-function: cubic-bezier(0.5, 0, 1, 1); } 10% { opacity: 1; } 38% { transform: translate(0px) rotate(0deg); animation-timing-function: ease-out; } 52% { transform: translate(8px, -12px) rotate(-40deg); opacity: 1; } 74%, 100% { transform: translate(20px, -28px) rotate(-90deg); opacity: 0; } }
+.ic2-brace { transform-box: view-box; transform-origin: 86px 64px; animation: ic2-brace calc(1.6s * var(--t, 1)) infinite; }
+@keyframes ic2-brace { 0%, 37%, 62%, 100% { transform: rotate(0deg) translate(0px); } 42% { transform: rotate(-5deg) translate(-1.2px); } 52% { transform: rotate(1.5deg) translate(0.3px); } }
+.ic2-brace-body { animation: ic2-brace-body calc(1.6s * var(--t, 1)) infinite; }
+@keyframes ic2-brace-body { 0%, 37%, 62%, 100% { transform: rotate(0deg); } 42% { transform: rotate(-2deg) translate(-0.6px); } }
+.ic2-idle { transform-box: view-box; transform-origin: 50px 88px; animation: ic2-idle calc(3.6s * var(--t, 1)) ease-in-out infinite; }
+@keyframes ic2-idle { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.018); } }
+@media (prefers-reduced-motion: reduce) { .ic2-root * { animation: auto ease 0s 1 normal none running none !important; } }

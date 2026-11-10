@@ -32,6 +32,31 @@
   const icon = (name, size = 14, extra = '') =>
     `<svg class="icon ${extra}" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`;
 
+  // ───────── Inty, the ArmorIQ mascot (SVGs exported by tools/inty/export.mjs) ─────────
+  const INTY_STATES = ['hello', 'search', 'read', 'think', 'act', 'yourMove', 'block', 'failed', 'offline', 'celebrate', 'wait', 'guard'];
+  const intySvg = {};
+  let intySeq = 0;
+  async function loadInty() {
+    await Promise.all(
+      INTY_STATES.map(async (s) => {
+        try {
+          const res = await fetch(`inty/${s}.svg`);
+          if (res.ok) intySvg[s] = await res.text();
+        } catch {}
+      })
+    );
+  }
+  // Each copy gets its own gradient ids, so two Intys on one page never borrow each other's fills.
+  const inty = (s, size = 'md') => {
+    if (!intySvg[s]) return '';
+    const n = ++intySeq;
+    return `<span class="inty inty--${size}" data-inty="${s}">${intySvg[s].replace(/\binty-([A-Za-z]+)-(\d+)\b/g, `inty-$1-$2-${n}`)}</span>`;
+  };
+  // Empty, loading, and error screens: Inty when available, the plain icon otherwise.
+  const stateArt = (s, ic, size = 'md', spin = '') =>
+    intySvg[s] ? inty(s, size) : `<span class="ps-icon">${icon(ic, 18, spin)}</span>`;
+  const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   const esc = (s) =>
     String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
   const $ = (sel, root = document) => root.querySelector(sel);
@@ -214,7 +239,7 @@
         <span class="row-main"><span class="row-title">All recipes</span><span class="row-meta">${state.recipes.length} runnable agents</span></span>
       </button>`;
     if (!list.length) {
-      el.innerHTML = home + `<div class="aq-page-state"><span class="ps-icon">${icon('search', 18)}</span><h2>No recipes match</h2><p>Try a different search term.</p></div>`;
+      el.innerHTML = home + `<div class="aq-page-state">${stateArt('search', 'search', 'sm')}<h2>No recipes match</h2><p>Try a different search term.</p></div>`;
       return;
     }
     el.innerHTML =
@@ -262,8 +287,11 @@
     };
     view.innerHTML = `<div class="home">
       <section class="home-hero">
-        <h1>Agents that ask before they act</h1>
-        <p>Each recipe is a complete agent wired to ArmorIQ. Every tool call it makes is checked against a policy first. Pick one, read the guide, and run it right here with no keys or accounts.</p>
+        <div class="home-hero-text">
+          <h1>Agents that ask before they act</h1>
+          <p>Each recipe is a complete agent wired to ArmorIQ. Every tool call it makes is checked against a policy first. Pick one, read the guide, and run it right here with no keys or accounts.</p>
+        </div>
+        ${inty('hello', 'lg')}
       </section>
       <section class="legend" aria-label="What a policy can decide">
         <div class="legend-item"><span class="legend-icon legend-icon--good">${icon('check', 16)}</span><div><strong>Allow</strong><span>The call runs right away.</span></div></div>
@@ -284,7 +312,7 @@
           <div class="card-grid">${items.map(card).join('')}</div>
         </section>`)
               .join('')
-          : `<div class="aq-page-state"><span class="ps-icon">${icon('search', 18)}</span><h2>No recipes match</h2><p>Try a different search term or language.</p></div>`
+          : `<div class="aq-page-state">${stateArt('search', 'search')}<h2>No recipes match</h2><p>Try a different search term or language.</p></div>`
       }
     </div>`;
   }
@@ -354,7 +382,7 @@
     const readme = state.detail.readme;
     const panel = $('#panel');
     if (!readme) {
-      panel.innerHTML = `<div class="aq-page-state"><span class="ps-icon">${icon('file', 18)}</span><h2>No README</h2><p>This recipe has no README.md yet.</p></div>`;
+      panel.innerHTML = `<div class="aq-page-state">${stateArt('read', 'file')}<h2>No README</h2><p>This recipe has no README.md yet.</p></div>`;
       return;
     }
     // The page header already shows the title, so drop the README's own first heading.
@@ -447,7 +475,7 @@
     const files = state.detail.files;
     const panel = $('#panel');
     if (!files.length) {
-      panel.innerHTML = `<div class="aq-page-state"><span class="ps-icon">${icon('folder', 18)}</span><h2>No files</h2></div>`;
+      panel.innerHTML = `<div class="aq-page-state">${stateArt('search', 'folder')}<h2>No files</h2></div>`;
       return;
     }
     if (!state.file || !files.includes(state.file)) {
@@ -500,7 +528,7 @@
     const panel = $('#panel');
     const id = state.selectedId;
     if (!state.policy || state.policy.id !== id) {
-      panel.innerHTML = `<div class="aq-page-state aq-page-state--loading"><span class="ps-icon">${icon('refresh', 18)}</span><h2>Loading policy</h2></div>`;
+      panel.innerHTML = `<div class="aq-page-state aq-page-state--loading">${stateArt('wait', 'refresh')}<h2>Loading policy</h2></div>`;
       try {
         const res = await fetch(`/api/policy/${encodeURI(id)}`);
         state.policy = await res.json();
@@ -511,10 +539,13 @@
     }
     const policies = state.policy.policies || [];
     if (!policies.length) {
-      panel.innerHTML = `<div class="aq-page-state"><span class="ps-icon">${icon('shield', 18)}</span><h2>No policy file</h2><p>This recipe does not ship a policy*.yaml file.</p></div>`;
+      panel.innerHTML = `<div class="aq-page-state">${stateArt('search', 'shield')}<h2>No policy file</h2><p>This recipe does not ship a policy*.yaml file.</p></div>`;
       return;
     }
-    panel.innerHTML = policies
+    const intro = intySvg.guard
+      ? `<div class="policy-intro">${inty('guard', 'sm')}<p>Every tool call is checked against these rules before it runs. A tool that is not listed gets <code>default_action</code>.</p></div>`
+      : '';
+    panel.innerHTML = intro + policies
       .map((p) => {
         if (p.error) {
           return `<section class="policy"><div class="aq-banner aq-banner--bad">${icon('alert', 16)}<div class="banner-body"><code>${esc(p.file)}</code> could not be parsed: ${esc(p.error)}</div></div></section>`;
@@ -665,6 +696,7 @@
           </div></div>
         <div class="aq-stats" id="stats" role="status" aria-label="Call counts"></div>
       </div>
+      <div class="run-inty" id="run-inty-stage"><span class="run-inty-art" id="run-inty" aria-hidden="true"></span><p class="run-inty-caption" id="run-inty-caption"></p></div>
       <div class="run-status" id="run-status"></div>
       <div class="timeline" id="timeline" aria-live="polite"></div>
       <details class="aq-collapsible" id="raw-details"><summary>${icon('chevron', 14, 'chev')}Raw log</summary><pre class="rawlog mono" id="rawlog"></pre></details>`;
@@ -714,6 +746,84 @@
     }
     const raw = $('#rawlog');
     raw.textContent = run.log || 'Nothing run yet.';
+    playInty(run, items);
+  }
+
+  // ───────── run: Inty acts out the run ─────────
+  // Offline runs finish in well under a second, so each state is held long enough to read,
+  // and the final state always lands.
+  const RUN_CAPTION = {
+    offline: 'Press Run offline and I will check every tool call against the policy.',
+    think: 'Planning which tools to call.',
+    act: 'Allowed. The call runs.',
+    yourMove: 'Held. This one waits for a person to approve it.',
+    block: 'Blocked by policy. The call never runs.',
+    celebrate: 'Done. Every outcome this recipe claims showed up.',
+    guard: 'Done. Every call went through the policy first.',
+    failed: "The run didn't finish. The raw log below says why.",
+  };
+  const player = { run: null, seq: [], idx: -1, timer: null };
+
+  function claimsMet(items) {
+    const claims = state.detail?.manifest?.demonstrates || [];
+    const checks = items.filter((i) => i.type === 'check');
+    const seen = {
+      allow: checks.some((i) => i.status === 'ALLOWED'),
+      hold: checks.some((i) => i.status === 'HELD'),
+      block: checks.some((i) => i.status === 'BLOCKED'),
+      'prompt-injection': checks.some((i) => i.injection),
+    };
+    return claims.every((c) => !(c in seen) || seen[c]);
+  }
+
+  function runSequence(run, items) {
+    if (!run.ran) return ['offline'];
+    const seq = [];
+    const push = (s) => seq[seq.length - 1] !== s && seq.push(s);
+    push('think');
+    for (const it of items) {
+      if (it.type === 'plan') push('think');
+      else if (it.status === 'ALLOWED') push('act');
+      else if (it.status === 'BLOCKED') push('block');
+      else {
+        push('yourMove');
+        if (it.hold === 'APPROVED') push('act');
+        if (it.hold === 'REJECTED') push('block');
+      }
+    }
+    if (run.done) push(run.code !== 0 || run.problem?.tone === 'bad' ? 'failed' : claimsMet(items) ? 'celebrate' : 'guard');
+    return seq;
+  }
+
+  function showInty(s) {
+    const slot = $('#run-inty');
+    if (!slot || !s || slot.dataset.state === s) return;
+    slot.dataset.state = s;
+    slot.innerHTML = inty(s, 'run');
+    $('#run-inty-caption').textContent = RUN_CAPTION[s] || '';
+  }
+
+  function playInty(run, items) {
+    if (!intySvg.offline) return ($('#run-inty-stage').hidden = true);
+    if (player.run !== run) {
+      clearTimeout(player.timer);
+      Object.assign(player, { run, idx: -1, timer: null });
+    }
+    player.seq = runSequence(run, items);
+    if (reducedMotion()) player.idx = player.seq.length - 1;
+    if (player.idx >= 0) showInty(player.seq[player.idx]);
+    if (!player.timer) stepInty();
+  }
+
+  function stepInty() {
+    if (player.idx >= player.seq.length - 1) return;
+    player.idx++;
+    if (player.run === getRun(state.selectedId)) showInty(player.seq[player.idx]);
+    const dwell = Math.max(500, Math.min(1100, 7000 / player.seq.length));
+    player.timer = setTimeout(() => {
+      player.timer = null;
+      stepInty();
+    }, dwell);
   }
 
   function startRun() {
@@ -758,7 +868,7 @@
     state.detail = null;
     const seq = ++state.detailSeq;
     renderRail();
-    $('#view').innerHTML = `<div class="aq-page-state aq-page-state--loading"><span class="ps-icon">${icon('refresh', 18, 'spin')}</span><h2>Loading</h2></div>`;
+    $('#view').innerHTML = `<div class="aq-page-state aq-page-state--loading">${stateArt('wait', 'refresh', 'md', 'spin')}<h2>Loading</h2></div>`;
     try {
       const res = await fetch('/api/recipe/' + encodeURI(id));
       const data = await res.json();
@@ -856,12 +966,12 @@
     renderChecks();
     bind();
     try {
-      const res = await fetch('/api/recipes');
+      const [res] = await Promise.all([fetch('/api/recipes'), loadInty()]);
       const data = await res.json();
       state.recipes = data.recipes;
       state.taxonomy = data.taxonomy;
     } catch (e) {
-      $('#rail-list').innerHTML = `<div class="aq-page-state aq-page-state--error"><span class="ps-icon">${icon('alert', 18)}</span><h2>Could not load recipes</h2><p>${esc(e)}</p></div>`;
+      $('#rail-list').innerHTML = `<div class="aq-page-state aq-page-state--error">${stateArt('failed', 'alert', 'sm')}<h2>Could not load recipes</h2><p>${esc(e)}</p></div>`;
       return;
     }
     renderRail();
