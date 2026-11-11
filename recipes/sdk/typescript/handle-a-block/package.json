@@ -1,0 +1,17 @@
+{
+  "name": "armoriq-handle-a-block",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/agent.js",
+    "demo": "node src/agent.js",
+    "demo:offline": "node --import ./offline/register.mjs offline/demo.mjs",
+    "test:offline": "node offline/test.mjs"
+  },
+  "dependencies": {
+    "@armoriq/sdk": "0.8.24",
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "dotenv": "16.4.7"
+  }
+}
