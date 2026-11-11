@@ -1,0 +1,17 @@
+# yaml-language-server: $schema=../../../../schema/recipe.schema.json
+schema: 1
+title: Build a Delegating Agent Team with the ArmorIQ SDK in TypeScript
+summary: A two agent incident team where the lead hands its log analyst a narrower delegated token, so the analyst reads metrics and logs but is refused the restart the lead then makes.
+framework: sdk
+language: typescript
+variant: js
+tier: community
+products: [sdk, policies, mcp-registration]
+use_case: support-ops
+tags: [delegation, multi-agent, incident-response, raw-loop, mcp]
+demonstrates: [allow, delegation, block]
+authors: [Naveen-6087]
+tested_with:
+  "@armoriq/sdk": "0.8.24"
+requires:
+  services: [armoriq, gemini]
