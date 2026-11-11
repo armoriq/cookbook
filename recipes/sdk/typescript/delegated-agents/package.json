@@ -1,0 +1,17 @@
+{
+  "name": "armoriq-delegated-agents",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/crew.js",
+    "demo": "node src/crew.js",
+    "demo:offline": "node --import ./offline/register.mjs src/crew.js",
+    "test:offline": "node offline/test.mjs"
+  },
+  "dependencies": {
+    "@armoriq/sdk": "0.8.24",
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "dotenv": "16.4.7"
+  }
+}
