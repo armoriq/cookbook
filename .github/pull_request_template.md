@@ -30,6 +30,18 @@ ArmorIQ SDK version:
 |---|---|---|---|
 |  |  |  |  |
 
+## Platform proof
+
+<!--
+Every recipe must work live on https://platform.armoriq.ai. Attach screenshots
+(hide org IDs and private data). See CONTRIBUTING.md#works-on-the-armoriq-platform.
+-->
+
+- MCP servers registered (screenshot):
+- Policy in Policy Studio, active, matching `policy.yaml` (screenshot per policy):
+- Audit trail for the recorded run (screenshot):
+- Anything that behaves differently live than offline:
+
 ## Notes for the reviewer
 
 <!-- Known limits, a split README, a new taxonomy value, anything you could not record live. -->
@@ -39,5 +51,9 @@ ArmorIQ SDK version:
 - [ ] `npm run index`, `npm run check`, and `npm run check:recipes <id>` pass locally
 - [ ] The video shows every scenario in the table, live, with the matching decisions in the ArmorIQ dashboard
 - [ ] The video ends with the offline run (`npm run demo:offline` or `python offline/demo.py`)
+- [ ] Ran live on platform.armoriq.ai with the SDK version in `tested_with`
+- [ ] Every MCP server is registered and every policy is created and active on the platform, from the shipped policy file
+- [ ] The README has the steps to register the servers and create the policy in Policy Studio
+- [ ] Live decisions match the offline run for every scenario
 - [ ] No keys, tokens, or private data are visible in the video, and the keys used for it are revoked
 - [ ] Re-recorded if review changed the agent code, the prompts, or the policy
