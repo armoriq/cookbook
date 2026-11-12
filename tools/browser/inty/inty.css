@@ -6,6 +6,7 @@
 .ic2-arm-r { transform-box: view-box; transform-origin: 87.5px 52px; }
 .ic2-fb { transform-box: fill-box; transform-origin: center center; }
 .ic2-grain { mix-blend-mode: soft-light; pointer-events: none; }
+html[data-theme="dark"] .ic2-root { --color-aq-surface: #ffffff; --color-aq-zebra: #f8f7f4; --color-aq-ink: #1b1a17; --color-aq-ink-soft: #46443f; --color-aq-ink-muted: #6b6a64; --color-aq-ink-faint: #a4a39c; --color-aq-border-strong: #d6d4cd; --color-aq-accent: #e85a19; --color-aq-accent-deep: #a53d0e; --color-aq-accent-soft: #f4f4f5; --color-aq-warn: #8a5a00; --color-aq-warn-soft: #fcf6e2; --color-aq-info: #1e40af; --color-aq-good: #2e7d32; --color-aq-bad: #b91c1c; --color-aq-iris: #7c3aed; filter: drop-shadow(rgba(255, 255, 255, 0.28) 0px 0px 0.75px); }
 .ic2-s-surface { stop-color: var(--color-aq-surface); }
 .ic2-s-zebra { stop-color: var(--color-aq-zebra); }
 .ic2-s-ink { stop-color: var(--color-aq-ink); }
