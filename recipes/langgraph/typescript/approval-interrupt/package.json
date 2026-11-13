@@ -1,0 +1,21 @@
+{
+  "name": "armoriq-langgraph-approval-interrupt",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An on-call LangGraph agent whose ArmorIQ holds become native interrupts",
+  "type": "module",
+  "main": "agent.js",
+  "scripts": {
+    "start": "node agent.js",
+    "demo:offline": "node --import ./offline/register.mjs offline/demo.mjs",
+    "test:offline": "node offline/test.mjs"
+  },
+  "dependencies": {
+    "@armoriq/sdk": "0.8.24",
+    "@langchain/core": "1.3.7",
+    "@langchain/langgraph": "1.7.3",
+    "@langchain/openai": "1.8.3",
+    "dotenv": "18.0.10",
+    "zod": "3.25.76"
+  }
+}
