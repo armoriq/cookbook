@@ -1,0 +1,21 @@
+{
+  "name": "armoriq-gateway-monitor-to-enforce",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "An accounts payable agent on the OpenAI Agents SDK that goes from record only, to Monitor mode, to enforced policy through Intent Gateway",
+  "main": "agent.mjs",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node agent.mjs",
+    "demo:offline": "node offline/demo.mjs",
+    "test:offline": "node offline/test.mjs"
+  },
+  "dependencies": {
+    "@openai/agents": "0.21.0",
+    "openai": "7.2.0",
+    "zod": "4.6.7"
+  }
+}
