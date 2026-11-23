@@ -112,6 +112,8 @@ products:
     label: ArmorClaude
   armorcodex:
     label: ArmorCodex
+  intent-gateway:
+    label: Intent Gateway
 
 use_cases:
   devtools:
@@ -154,6 +156,8 @@ outcomes:
     label: Audit log
   multi-server:
     label: One plan, several MCP servers
+  monitor-mode:
+    label: Monitor mode (would block, nothing stopped)
 
 services:
   armoriq:
