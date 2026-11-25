@@ -117,4 +117,129 @@ The server keeps its own guard rails too: `run_select` opens the database read o
 
 The server uses stdio, so it runs as a local subprocess of the agent. ArmorIQ's cloud proxy has no network path to it, so `mode="proxy"` would fail. In `mode="sdk"` ArmorIQ makes the allow, hold, or block decision and this process runs each approved call itself.
 
-> The rest of this guide (the live setup steps on platform.armoriq.ai) lands in the next part.
+## Step 6: Write the policy
+
+1. In the console, open **Policies → Policy Studio → Single Policy**.
+2. Set **Target Type** to `mcp_server` and **Target ID** to the `sql-warehouse` server.
+3. Set **Default enforcement action** to `block`.
+4. Paste `policy.yaml` into the YAML editor:
+
+```yaml
+name: sql-warehouse-policy
+version: v0.1.0
+scope:
+  target_type: mcp
+  target: sql-warehouse   # replace with your registered server's id
+  caller: all
+default_action: block
+priority: 50
+rules:
+  - tool: list_tables
+    action: allow
+  - tool: describe_table
+    action: allow
+  - tool: run_select
+    action: allow
+  - tool: insert_row
+    action: hold
+  - tool: update_rows
+    action: hold
+  - tool: delete_rows
+    action: block
+  - tool: drop_table
+    action: block
+  - tool: export_table
+    action: block
+```
+
+5. Save and activate.
+
+## Step 7: Configure environment variables
+
+Fill in `.env` (copied from `.env.example`):
+
+```
+ARMORIQ_API_KEY=ak_your_key_here
+GEMINI_API_KEY=your_gemini_key_here
+GEMINI_MODEL=gemini-flash-latest
+USER_EMAIL=you@your-org.com
+SQL_MCP_NAME=sql-warehouse
+```
+
+`.env` and `analytics.db` are already in `.gitignore`.
+
+## Step 8: How the agent is built
+
+`agent.py` is a plain LangChain 1.x agent. ArmorIQ adds a factory once per process and one callback per request:
+
+```python
+armoriq = ArmorIQLangChain(
+    armoriq_client=ArmorIQClient(api_key=armoriq_api_key),
+    mode="sdk",
+    default_mcp_name="sql-warehouse",
+    validity_seconds=2400,
+)
+
+agent = create_agent(model, tools, system_prompt=SYSTEM_PROMPT,
+                     middleware=[ArmorIQRefusalsAsToolMessages()])
+
+handler = armoriq.for_user(user_email, goal=goal, on_event=on_event)
+result = await agent.ainvoke({"messages": [{"role": "user", "content": goal}]},
+                             config={"callbacks": [handler]})
+```
+
+The handler uses two LangChain callbacks. `on_llm_end` takes the tool calls the model just chose and mints an intent token for exactly those tools. `on_tool_start` asks ArmorIQ about each call before it runs. On allow it returns and the tool runs. On hold it emits a `hold` event and waits for the approval decision (up to `approval_wait_seconds`, 300 by default). On block, or a rejected or timed out hold, it raises `PolicyBlockedException` or `PolicyHoldException`, which stops the tool.
+
+### The one piece of glue: refusals as tool results
+
+LangChain's `create_agent` runs tools in a LangGraph `ToolNode` whose default error handler re-raises anything that is not a tool argument error. Without help, the first block would end the whole run with a traceback. `ArmorIQRefusalsAsToolMessages` is a 20 line `AgentMiddleware` that catches only the two ArmorIQ refusal exceptions and returns them to the model as an error `ToolMessage`:
+
+```python
+async def awrap_tool_call(self, request, handler):
+    try:
+        return await handler(request)
+    except (PolicyBlockedException, PolicyHoldException) as exc:
+        return ToolMessage(content=f"ArmorIQ refused {request.tool_call['name']}: {exc}",
+                           name=request.tool_call["name"],
+                           tool_call_id=request.tool_call["id"], status="error")
+```
+
+The model then reads "ArmorIQ refused drop_table" like any other tool result and explains it to the user. Every other exception still propagates. Enforcement is unchanged: the tool already did not run.
+
+## Step 9: Run it
+
+```bash
+python agent.py "Which product made the most revenue in October 2026? Show the top three."
+python agent.py "Order 1042 was returned. Mark it as refunded."
+python agent.py "Summarize this week's customer feedback."
+```
+
+The second request pauses on `update_rows` with `[ARMORIQ EVENT] hold: {...}`. Approve the delegation in the ArmorIQ dashboard and the update runs; reject it and the agent reports that it could not. The third request is the injection: watch the model try `drop_table` and `export_table` with the arguments the comment asked for, and watch both get blocked. A capable live model may also refuse on its own, which is fine; the policy is what you rely on when it does not.
+
+## Step 10: See it in the dashboard
+
+Open **Intent** in the console, filtered by your `USER_EMAIL`. Each run is a plan with its tool calls. The injection run shows `drop_table` on `orders` and `export_table` on `customers` with the paste site URL, both blocked, so a reviewer sees what was attempted, not just that something was stopped.
+
+## Honest limits
+
+- **Approvals block the run.** In this adapter a hold waits inside `on_tool_start` until the decision arrives or `approval_wait_seconds` passes. Nothing is checkpointed. If you want the agent to pause, persist, and resume later, see the LangGraph `approval-interrupt` recipe, which maps a hold onto `interrupt()`.
+- **The offline stand-in decides by tool name only.** Live ArmorIQ also sees the arguments (the actual SQL, table, and values), so you can write richer rules than this policy uses. The offline `injection:` line comes from a phrase scan in the stand-in; live, nothing depends on detecting the injection, because the drop and export are blocked by policy.
+- **Tools must be in the plan.** In `mode="sdk"` ArmorIQ blocks a tool the model did not declare in the plan captured at `on_llm_end`. The handler mints that plan for you; it only matters if you call tools outside the agent loop.
+- **`create_agent` runs on LangGraph.** ArmorIQ lists LangChain 1.2.15 as tested but no LangGraph version. This recipe was run with `langgraph` 1.1.6 as pinned. Test your own versions.
+- **One handler per request.** Create a new `for_user` handler for each concurrent request. Two root runs at once on one handler fail closed.
+
+## Troubleshooting
+
+| Symptom | Likely cause |
+|---|---|
+| `No module named 'mcp.server.fastmcp'` | You are on `mcp>=2`. Keep `mcp==1.30.0` with `langchain-mcp-adapters==0.3.0` |
+| `StructuredTool does not support sync invocation` | MCP tools are async. Call `agent.ainvoke`, as `agent.py` does |
+| A block ends the run with a traceback | The `ArmorIQRefusalsAsToolMessages` middleware is missing from `create_agent` |
+| Everything is blocked, nothing held | No rule matched and `default_action` is `block`. Check the policy is active and its target matches `SQL_MCP_NAME` |
+| The update was approved but nothing changed | You already ran it once. Delete `analytics.db` to reset the data |
+
+## What's next
+
+- **Add an argument rule.** Hold `update_rows` only when `table` is `orders`, and allow it on a scratch table.
+- **Stream holds to a UI.** Send `on_event` to your approvals screen instead of `print`.
+- **Make approvals durable.** The LangGraph `approval-interrupt` recipe shows the same hold surviving a pause and a resume through a checkpointer.
