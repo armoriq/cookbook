@@ -1,0 +1,64 @@
+substitutions:
+  _REGION: 'us-central1'
+  _SERVICE: 'armoriq-cookbook'
+  _AR_HOSTNAME: 'us-central1-docker.pkg.dev'
+  _AR_REPO: 'cloud-run-source-deploy'
+
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_AR_HOSTNAME}/$PROJECT_ID/${_AR_REPO}/${_SERVICE}:$COMMIT_SHA'
+      - '-t'
+      - '${_AR_HOSTNAME}/$PROJECT_ID/${_AR_REPO}/${_SERVICE}:latest'
+      - '.'
+    timeout: 1800s
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '${_AR_HOSTNAME}/$PROJECT_ID/${_AR_REPO}/${_SERVICE}:$COMMIT_SHA'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '${_AR_HOSTNAME}/$PROJECT_ID/${_AR_REPO}/${_SERVICE}:latest'
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - '${_SERVICE}'
+      - '--image'
+      - '${_AR_HOSTNAME}/$PROJECT_ID/${_AR_REPO}/${_SERVICE}:$COMMIT_SHA'
+      - '--region'
+      - '${_REGION}'
+      - '--platform'
+      - 'managed'
+      - '--memory'
+      - '2Gi'
+      - '--cpu'
+      - '1'
+      - '--max-instances'
+      - '5'
+      - '--min-instances'
+      - '0'
+      - '--port'
+      - '8080'
+      - '--timeout'
+      - '300'
+      - '--concurrency'
+      - '40'
+      - '--update-annotations'
+      - 'run.googleapis.com/invoker-iam-disabled=true'
+
+images:
+  - '${_AR_HOSTNAME}/$PROJECT_ID/${_AR_REPO}/${_SERVICE}:$COMMIT_SHA'
+  - '${_AR_HOSTNAME}/$PROJECT_ID/${_AR_REPO}/${_SERVICE}:latest'
+
+options:
+  machineType: 'N1_HIGHCPU_8'
+  logging: CLOUD_LOGGING_ONLY
+
+timeout: 2400s
