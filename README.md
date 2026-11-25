@@ -1,5 +1,7 @@
 # Cookbook
 
+<p align="center"><img src=".github/assets/inty-guard.svg" width="176" alt="Inty, the ArmorIQ mascot, holding a shield while threats bounce off it"></p>
+
 The Cookbook is where you go once you know what ArmorIQ does and want to see a complete, working agent built with it, start to finish, including the platform setup around the code.
 
 Each recipe is self-contained: you can clone it, run it, and adapt it, without reading the rest of the SDK docs first.
