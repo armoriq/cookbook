@@ -523,3 +523,26 @@ details.aq-collapsible > summary:hover { color: var(--color-aq-ink); }
 .hljs-strong { font-weight: 600; }
 .hljs-addition { color: var(--code-string); }
 .hljs-deletion { color: var(--code-variable); }
+
+/* ───────── Inty, the ArmorIQ mascot ───────── */
+/* The art is 176 x 138 with room around Inty for props, so widths below are the full drawing. */
+.inty { display: inline-block; flex-shrink: 0; line-height: 0; }
+.inty svg { display: block; width: 100%; height: auto; overflow: visible; }
+.inty--sm { width: 5.5rem; }
+.inty--md { width: 8.5rem; }
+.inty--run { width: 6.5rem; }
+.inty--lg { width: 12rem; }
+.aq-page-state .inty { margin-bottom: 0.25rem; }
+
+.home-hero { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+.home-hero-text { min-width: 0; }
+@media (max-width: 720px) {
+  .home-hero > .inty { display: none; }
+}
+
+.policy-intro { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+.policy-intro p { font-size: var(--text-aq-sm); line-height: var(--text-aq-sm--line-height); color: var(--color-aq-ink-soft); max-width: 36rem; }
+
+.run-inty { display: flex; align-items: center; gap: 0.75rem; margin-top: 1rem; padding: 0.25rem 1rem; border: 1px solid var(--color-aq-border); border-radius: var(--r-xl); background: var(--color-aq-zebra); }
+.run-inty-art { display: inline-flex; min-width: 6.5rem; min-height: 5.1rem; align-items: center; }
+.run-inty-caption { font-size: var(--text-aq-sm); line-height: var(--text-aq-sm--line-height); color: var(--color-aq-ink-soft); }
