@@ -1,0 +1,23 @@
+{
+  "name": "armoriq-strands-support-desk",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "description": "A support-desk assistant on the Strands Agents TypeScript SDK where reads and replies are allowed, refunds wait for approval, and closing an account is blocked",
+  "main": "agent.mjs",
+  "scripts": {
+    "start": "node agent.mjs",
+    "demo": "node demo.mjs",
+    "demo:offline": "node --import ./offline/register.mjs demo.mjs",
+    "test:offline": "node offline/test.mjs"
+  },
+  "dependencies": {
+    "@armoriq/sdk": "0.8.24",
+    "@google/genai": "2.32.0",
+    "@modelcontextprotocol/server": "2.4.0",
+    "@strands-agents/sdk": "1.24.0"
+  }
+}
