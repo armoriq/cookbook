@@ -181,8 +181,11 @@
     },
     {
       "if": {
-        "required": ["language"],
-        "properties": { "language": { "enum": ["python", "typescript"] } }
+        "required": ["language", "products"],
+        "properties": {
+          "language": { "enum": ["python", "typescript"] },
+          "products": { "type": "array", "contains": { "const": "sdk" } }
+        }
       },
       "then": { "required": ["tested_with"] }
     },
