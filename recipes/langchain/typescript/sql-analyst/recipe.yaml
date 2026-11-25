@@ -1,0 +1,17 @@
+# yaml-language-server: $schema=../../../../schema/recipe.schema.json
+schema: 1
+title: Build a governed SQL analyst with LangChain and the ArmorIQ SDK in TypeScript
+summary: A LangChain data analyst over a local SQLite MCP server where selects run, inserts and updates wait for approval, and drops, deletes, exports, and a planted injection row are stopped.
+framework: langchain
+language: typescript
+variant: js
+tier: community
+products: [sdk, policies, approvals, mcp-registration]
+use_case: data-access
+tags: [langchain, sql, sqlite, mcp, human-approval]
+demonstrates: [allow, hold, block, prompt-injection]
+authors: [Naveen-6087]
+tested_with:
+  "@armoriq/sdk": "0.8.24"
+requires:
+  services: [armoriq, gemini]
