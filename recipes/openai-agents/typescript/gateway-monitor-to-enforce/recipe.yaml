@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=../../../../schema/recipe.schema.json
+schema: 1
+title: Govern an OpenAI Agents SDK Agent with Intent Gateway in TypeScript
+summary: An accounts payable agent on the OpenAI Agents SDK for JavaScript goes from record only, to Monitor mode, to enforced policy by changing nothing but its base URL.
+framework: openai-agents
+language: typescript
+variant: js
+tier: community
+products: [intent-gateway, policies]
+use_case: finance
+tags: [openai-agents, gateway, monitor-mode, accounts-payable, rollout]
+demonstrates: [allow, block, monitor-mode]
+authors: [Naveen-6087]
+requires:
+  services: [armoriq, openai]
