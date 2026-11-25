@@ -10,10 +10,13 @@ This guide covers what we accept, how to add a recipe, the checks your PR has to
 - [Before you start](#before-you-start)
 - [Add a recipe](#add-a-recipe)
 - [What every recipe must have](#what-every-recipe-must-have)
+- [Works on the ArmorIQ platform](#works-on-the-armoriq-platform)
+- [Policies on the platform](#policies-on-the-platform)
 - [Offline mode](#offline-mode)
 - [The recipe.yaml manifest](#the-recipeyaml-manifest)
 - [Writing the README](#writing-the-readme)
 - [Pull requests](#pull-requests)
+- [Demo video](#demo-video)
 - [How we review](#how-we-review)
 - [Official and community recipes](#official-and-community-recipes)
 - [Changes outside recipes](#changes-outside-recipes)
@@ -64,8 +67,9 @@ npm run serve            # http://localhost:3000
    - Every segment is lowercase kebab case (`^[a-z0-9]+(-[a-z0-9]+)*$`), at most 40 characters.
 2. **Start from an existing recipe** in the same lane. `recipes/sdk/typescript/filesystem-notes/` (TypeScript) and `recipes/strands/python/support-desk/` (Python) are good starting points.
 3. **Build the agent, the policy, and the offline mode** (see the next sections).
-4. **Write `recipe.yaml` and the README.**
-5. **Regenerate the index and run the checks:**
+4. **Set it up on [platform.armoriq.ai](https://platform.armoriq.ai) and run it live.** Register the MCP servers, create the policy from your `policy.yaml` in Policy Studio, and run every scenario against the real platform. See [Works on the ArmorIQ platform](#works-on-the-armoriq-platform) and [Policies on the platform](#policies-on-the-platform).
+5. **Write `recipe.yaml` and the README.**
+6. **Regenerate the index and run the checks:**
 
    ```bash
    npm run index
@@ -73,7 +77,8 @@ npm run serve            # http://localhost:3000
    npm run check:recipes <framework>/<language>/<slug>
    ```
 
-6. **Open a pull request** against `main`.
+7. **Record the [demo video](#demo-video)** of the live run on the platform, and write the scenario table.
+8. **Open a pull request** against `main` and fill in the PR template.
 
 If your recipe needs a framework, language, product, use case, outcome, service, or package that is not in `schema/taxonomy.yaml` yet, add it to that file in the same PR, with its label (and its note or description where the file asks for one).
 
@@ -86,7 +91,8 @@ A recipe is self contained. Someone should be able to copy the folder out of the
 | `recipe.yaml` | Valid against `schema/recipe.schema.json`. See [the manifest](#the-recipeyaml-manifest). |
 | `README.md` | The guide. Its first `# ` heading equals `title` in `recipe.yaml`, character for character. |
 | Runnable code | The real agent, not pseudo code. |
-| `policy.yaml` | The ArmorIQ policy the recipe expects, as a file, so readers do not rebuild it by hand. A recipe that spans several MCP servers ships one file per server (`policy.<server>.yaml`). |
+| `policy.yaml` | The ArmorIQ policy the recipe expects, as a file, exactly as it is set on the platform. A recipe that spans several MCP servers ships one file per server (`policy.<server>.yaml`). Required for every recipe whose agent calls tools. See [Policies on the platform](#policies-on-the-platform). |
+| Platform setup in the README | The steps to register each MCP server and create each policy on [platform.armoriq.ai](https://platform.armoriq.ai), so a reader gets the same decisions live that the offline run shows. |
 | `.env.example` | Every environment variable the live run needs, with a comment saying where to get it. Never real values. |
 | `.gitignore` | At least `node_modules/`, `.env`, and (Python) `.venv/` and `__pycache__/`. |
 | Pinned dependencies | TypeScript: a committed `package-lock.json`. Python: `requirements.txt` with every line pinned with `==`. |
@@ -98,6 +104,65 @@ And these rules always apply:
 - **No shared code between recipes.** Nothing may import, build, or reference a file outside its own folder. Copy what you need. (Markdown links to repo docs are fine.)
 - **No symlinks** and no generated folders (`node_modules`, `.venv`, `dist`, `__pycache__`) in the commit.
 - **The ArmorIQ check must be real.** Every tool call the agent makes goes through ArmorIQ before it runs.
+- **It must work on the platform.** Offline mode is how CI checks a recipe, not a replacement for the real thing. A recipe that only works offline is not accepted.
+
+## Works on the ArmorIQ platform
+
+Every recipe has to run live against [platform.armoriq.ai](https://platform.armoriq.ai), with the current published ArmorIQ SDK, before it is merged. Reviewers don't have your accounts or keys, so you prove it in the PR.
+
+**What "works on the platform" means:**
+
+1. **It uses a real ArmorIQ account and API key** (from **Settings → API Keys**, or `armoriq login` in the SDK's bundled CLI). No stand ins, no mocked responses, no private or staging endpoints.
+2. **Every MCP server the agent calls is registered** on the platform (**MCP Servers → Add MCP Server**), under the name the code and the policy use.
+3. **Every policy is created on the platform** from the recipe's policy file. See [Policies on the platform](#policies-on-the-platform).
+4. **The live decisions match the offline ones.** Each tool the offline run shows as allowed, held, or blocked gets the same decision live. Held calls show up in the console's approval queue, and approving or rejecting them there changes what the agent does.
+5. **The run shows up in the platform's audit trail** with the same tools.
+6. **The SDK version in `tested_with` is the one you ran live.** If the platform or SDK behaves differently from the offline stand in (a missing feature, a known bug, a transport the proxy can't reach), say so in the README's limits and in the PR. Don't paper over it in the offline stand in.
+
+**Proof you attach to the PR:**
+
+- The [demo video](#demo-video), which shows the live run, the policy in Policy Studio, the approval queue, and the audit trail.
+- A screenshot of each policy in Policy Studio (target, default action, and rules visible) and of each registered MCP server. Hide your organization's IDs and anything private.
+- The platform proof checklist in the PR template, filled in.
+
+A reviewer may ask you to run one scenario again live on a call. If something only works on your account (a feature flag, a custom setting), say so up front.
+
+## Policies on the platform
+
+**Where policies live.** The decision a live run gets comes from the policy on [platform.armoriq.ai](https://platform.armoriq.ai), not from the repo. The recipe's code never reads or uploads `policy.yaml`. That file has two jobs:
+
+- It is the **source of truth for readers**: the exact policy they create on the platform, so nobody rebuilds it from prose.
+- It **drives offline mode**: the offline stand in decides allow, hold, or block from it.
+
+So the file and the platform policy must say the same thing. If they drift, the offline run (and CI) shows one story and the live run shows another.
+
+**How to create a policy on the platform.** One policy per MCP server, because policy scope is per server, not per agent:
+
+1. Register the MCP server first (**MCP Servers → Add MCP Server**) and note its ID.
+2. Open **Policies → Policy Studio → Single Policy**.
+3. Set **Target Type** to `mcp_server` and **Target ID** to the registered server's ID.
+4. Set **Default enforcement action** to the file's `default_action` (usually `block`, so anything not named is denied).
+5. Paste the policy file into the YAML editor.
+6. Save, then **activate** it. A saved policy that isn't active doesn't decide anything.
+7. Check it: run one allowed and one blocked tool live and confirm the decisions match.
+
+Put these steps in the recipe's README, with the recipe's own server names and policy name filled in, under its own heading (for example "Create the policy"). Start the policy file with a comment that points there:
+
+```yaml
+# Author in Platform -> Policies -> Policy Studio -> Single Policy
+# (Target Type: mcp_server, Target ID: your registered <server> MCP server's id)
+name: <recipe>-policy
+default_action: block
+rules:
+  - tool: <tool_name>
+    action: allow   # allow, hold, or block
+```
+
+**What not to use.** `armoriq policy propose` and `armoriq policy propose --activate` in the SDK's CLI set the **organization wide** policy profile that governs the coding agent products (ArmorClaude, ArmorCodex). They do not create per server policies. Only use them in a `claude-code` or `codex` recipe, where that profile is the point.
+
+**When you change a policy.** Change the file and the platform policy together, in the same PR. Run the affected scenarios live again, re-record them, and update the README if a step or a decision changed.
+
+**Recipes with no tool calls to govern** (a `config` recipe that only sets up the platform) still ship the policy or configuration they create, as a file, with the console steps in the README.
 
 ## Offline mode
 
@@ -176,7 +241,7 @@ Use this order (look at any existing recipe for an example):
 2. **What you'll build:** the flow, and a table of which tools are allowed, held, and blocked.
 3. **Run it offline:** the one command, and what the reader should see.
 4. **Before you start:** accounts, keys, and versions needed for the live run.
-5. **Steps:** numbered, from creating the ArmorIQ account and policy to running the agent live.
+5. **Steps:** numbered, from creating the ArmorIQ account, registering the MCP servers, and [creating the policy on the platform](#policies-on-the-platform) to running the agent live.
 6. **Troubleshooting:** the errors people actually hit, with fixes.
 
 If you adapted someone else's work, credit them with a link.
@@ -197,28 +262,88 @@ npm run check
 npm run check:recipes <your recipe id>
 ```
 
-**PR description.** Say what the recipe shows, which outcomes the offline run demonstrates, and anything a reviewer should know (a known limitation, a split README, a new taxonomy value).
+**PR description.** Fill in the PR template. It asks for:
+
+- What the recipe shows, and anything a reviewer should know (a known limitation, a split README, a new taxonomy value).
+- The [demo video](#demo-video) link.
+- The scenario table: every scenario you recorded, what you typed, the outcome you expected, and where it appears in the video.
+
+A recipe PR that has no video or no scenario table is marked **needs demo** and is not reviewed until both are added.
 
 **Commits.** Clear messages in the imperative ("Add Strands support desk recipe"). We squash merge, so the PR title becomes the commit on `main`.
 
 **CI.** Every PR runs the metadata checks and builds and tests only the recipes it touches. Fork PRs run with read only permissions and no secrets, which is why the offline test has to stand on its own.
 
+## Demo video
+
+Every PR that adds a recipe, or changes how a recipe behaves, must include a screen recording of the agent running **live**, against the real ArmorIQ platform, on a commit from the PR.
+
+**Why we ask for it.** CI can only run the offline mode, where ArmorIQ, the model, and the MCP servers are stand ins. Reviewers don't have your keys or accounts, so they can't run your recipe live, and we don't want to rebuild every recipe before we merge it. The video is your proof that the live run works the way the README says. Reviewers check the video and CI together, and only spot-check the live run themselves.
+
+**What to record.** One video, usually 2 to 6 minutes:
+
+1. **Context, in the terminal.** The recipe folder, `git rev-parse --short HEAD` (the commit you're recording), and the ArmorIQ SDK version (`npm ls @armoriq/sdk` or `pip show armoriq-sdk`).
+2. **The platform setup.** The registered MCP servers, and `policy.yaml` open next to the same policy in Policy Studio (target, default action, rules, and that it is active).
+3. **Every scenario in your scenario table.** At least one for each outcome in `demonstrates`:
+   - `allow`: a tool call that goes through, and its result.
+   - `hold`: a call that is held, the approval request in the dashboard, then one run where it is approved and one where it is rejected.
+   - `block`: a call that is blocked, and the agent handling the block without crashing.
+   - `prompt-injection`: the planted instruction, and ArmorIQ stopping the action it asks for.
+   - `delegation`, `multi-server`, `audit-log`: the handoff, the calls across servers, or the log entries, shown the same way.
+4. **The audit trail.** The ArmorIQ dashboard showing the decisions from this run (same tools, same timestamps).
+5. **The offline run.** `npm run demo:offline` (or `python offline/demo.py`) to the end. Twenty seconds is enough.
+
+**Rules.**
+
+- **Show it, don't tell it.** The terminal output and the dashboard have to be readable. Use a large font and record at 1080p or higher. Narration or on screen captions are welcome but optional.
+- **No cuts inside a scenario.** You can cut between scenarios (to skip installs or waiting), but each scenario has to be one continuous take from the prompt to the outcome.
+- **Live means live.** No stand ins, mocked responses, or edited output in the live part. If a scenario only works offline, leave it out of the live part and say so in the PR.
+- **No secrets on screen.** Use keys you can revoke and revoke them afterwards. Don't `cat .env`, and hide or blur any key, token, email address, or private data before you upload.
+- **Re-record when behavior changes.** If review changes the agent code, the prompts, or the policy, record the affected scenarios again and link the new video. Typo fixes and README edits don't need a new recording.
+
+**Where to put it.** Drag the file (`.mp4` or `.mov`) into the PR description, where GitHub hosts it. If it's over GitHub's upload limit, link an unlisted YouTube video or a public Loom instead. The link must work without signing in and must stay up after the PR is merged. Don't commit video files to the repo.
+
+**Scenario table.** Add it to the PR description so a reviewer can jump straight to each scenario:
+
+| Scenario | What you typed or ran | Expected outcome | Timestamp |
+|---|---|---|---|
+| Read an open issue | `npm start -- "summarize issue 12"` | `list_issues` ALLOWED | 0:45 |
+| Delete a branch | `npm start -- "delete branch old-docs"` | `delete_branch` BLOCKED, agent explains why | 1:30 |
+| Merge a PR, approved | `npm start -- "merge PR 7"` | `merge_pull_request` HELD, then APPROVED | 2:10 |
+| Merge a PR, rejected | same, rejected in the dashboard | HELD, then REJECTED, agent stops cleanly | 3:05 |
+
+**Which PRs need one.**
+
+| Change | Video |
+|---|---|
+| New recipe | Required, every scenario |
+| Recipe code, prompt, or policy change | Required, the scenarios the change affects |
+| SDK or dependency upgrade in a recipe | Required, a short run of each outcome |
+| Recipe browser (`tools/browser/`, `tools/server.mjs`) | Required, the screens you changed |
+| README only, typo, taxonomy, or schema fixture | Not needed |
+| Split PRs for one recipe | Once, on the PR that makes the recipe runnable. The others link to it. |
+
+**If you can't record a live run** (for example, the service you integrate is invite only), say so in the PR and record everything except the live part. A maintainer decides whether to run it live or keep it at community tier with that limit stated in the README.
+
 ## How we review
 
 A PR is merged when it has **one approving review** and every required check is green. Reviewers check the following, in this order.
 
-**1. It runs.**
+**1. It runs, offline and on the platform.**
 
 - `npm run check` passes.
 - `npm run check:recipes <id>` passes on a clean install.
 - `npm run demo:offline` (or `offline/demo.py`) shows the outcomes the manifest claims.
+- The [demo video](#demo-video) shows every scenario in the scenario table, live, on a commit from this PR, with the matching decisions in the ArmorIQ dashboard.
+- The platform proof is attached: each policy in Policy Studio, each registered MCP server, and the audit trail. See [Works on the ArmorIQ platform](#works-on-the-armoriq-platform).
 
 **2. It is honest.**
 
 - Every tool call is checked by ArmorIQ before it executes. Nothing bypasses it.
 - The offline stand in reads `policy.yaml`, so the offline story matches the live one.
+- `policy.yaml` matches the policy shown in Policy Studio, and the README has the steps to create it there.
 - The README does not claim behavior the code does not have. Known limits are stated plainly.
-
+- The video matches the code: same prompts, same policy, same outcomes. A video that was edited to hide a failure, or recorded on code that is not in the PR, gets the PR closed.
 **3. It is safe to run.**
 
 - No secrets, no telemetry to third parties, no network calls in offline mode.
