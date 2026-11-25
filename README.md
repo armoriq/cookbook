@@ -43,6 +43,12 @@ Each recipe is self-contained: you can clone it, run it, and adapt it, without r
 | [Build a Strands Agent with the ArmorIQ SDK in TypeScript](recipes/strands/typescript/support-desk/)<br>A support-desk assistant on the Strands Agents TypeScript SDK where replies pass, refunds wait for approval, account closure is blocked, and a planted injection ticket goes nowhere. | Strands Agents (JavaScript) | Support and ops | ArmorIQ SDK, Policies, Approvals, MCP registration | Allowed call, Held for approval, Blocked call, Prompt injection blocked | community |
 | [Govern an OpenAI Agents SDK Agent with Intent Gateway in TypeScript](recipes/openai-agents/typescript/gateway-monitor-to-enforce/)<br>An accounts payable agent on the OpenAI Agents SDK for JavaScript goes from record only, to Monitor mode, to enforced policy by changing nothing but its base URL. | OpenAI Agents SDK (JavaScript) | Finance | Intent Gateway, Policies | Allowed call, Blocked call, Monitor mode (would block, nothing stopped) | community |
 
+#### Config only
+
+| Recipe | What runs the agent | Use case | ArmorIQ products | Shows | Tier |
+|---|---|---|---|---|---|
+| [Apply the ArmorOps Policy Pack to Claude Code with ArmorClaude](recipes/claude-code/config/armorops-policy-pack/)<br>A ready ArmorClaude policy for cloud and infra work that lets kubectl, aws, and terraform reads run, holds state changes, and blocks irreversible deletes. | Claude Code (Config only) | Coding agents | ArmorClaude, ArmorCodex, Policies, Approvals | Allowed call, Held for approval, Blocked call | community |
+
 ### By what runs the agent
 
 A framework, or the ArmorIQ SDK in a hand written loop, or the coding agent a plugin runs in.
@@ -51,6 +57,7 @@ A framework, or the ArmorIQ SDK in a hand written loop, or the coding agent a pl
 |---|---|
 | ArmorIQ SDK (no framework) | [Build a Cross-MCP Research Agent with the ArmorIQ SDK](recipes/sdk/typescript/cross-mcp-research/) (JavaScript)<br>[Build a Crypto Prices Agent with the ArmorIQ SDK](recipes/sdk/typescript/crypto-prices/) (JavaScript)<br>[Build a Delegating Agent Team with the ArmorIQ SDK in TypeScript](recipes/sdk/typescript/delegated-agents/) (JavaScript)<br>[Build a Filesystem Notes Agent with the ArmorIQ SDK](recipes/sdk/typescript/filesystem-notes/) (JavaScript)<br>[Build a GitHub Agent with the ArmorIQ SDK](recipes/sdk/typescript/github-agent/) (JavaScript)<br>[Build a GitHub Write Guard with the ArmorIQ SDK](recipes/sdk/typescript/github-write-guard/) (JavaScript)<br>[Build a Memory Knowledge Agent with the ArmorIQ SDK](recipes/sdk/typescript/memory-knowledge/) (JavaScript)<br>[Build a Postgres Agent with the ArmorIQ SDK](recipes/sdk/typescript/postgres-notes/) (JavaScript)<br>[Build a Release Agent That Handles Blocks with the ArmorIQ SDK in TypeScript](recipes/sdk/typescript/handle-a-block/) (JavaScript) |
 | Claude Agent SDK | [Build a Claude Agent SDK Release Assistant with the ArmorIQ SDK](recipes/claude-agent-sdk/typescript/governed-tools/) (JavaScript) |
+| Claude Code | [Apply the ArmorOps Policy Pack to Claude Code with ArmorClaude](recipes/claude-code/config/armorops-policy-pack/) (Config only) |
 | CrewAI | [Build a CrewAI Crew with the ArmorIQ SDK](recipes/crewai/python/crypto-crew/) (Python)<br>[Build a Delegating CrewAI Crew with the ArmorIQ SDK](recipes/crewai/python/delegated-crew/) (Python) |
 | Google ADK | [Build a Google ADK Agent with the ArmorIQ SDK](recipes/google-adk/typescript/ops-copilot/) (TypeScript) |
 | LangChain | [Build a governed SQL analyst with LangChain and the ArmorIQ SDK](recipes/langchain/python/sql-analyst/) (Python)<br>[Build a governed SQL analyst with LangChain and the ArmorIQ SDK in TypeScript](recipes/langchain/typescript/sql-analyst/) (JavaScript)<br>[Build a LangChain Agent with the ArmorIQ SDK](recipes/langchain/typescript/weather-agent/) (JavaScript) |
