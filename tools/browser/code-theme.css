@@ -1,0 +1,26 @@
+/* Code theme: the editor palette for every code surface in the recipe browser
+   (the Code tab and code blocks in the Guide). Code is always shown dark, in both
+   app themes, the way an IDE does. These are the only raw colors outside tokens.css;
+   styles.css references them through the --code-* variables below. */
+:root {
+  --code-bg: #0f1117;
+  --code-bg-raised: #151821;
+  --code-bg-hover: #1c2030;
+  --code-bg-active: #232838;
+  --code-border: #262b3a;
+  --code-ink: #d4d8e2;
+  --code-muted: #6c7389;
+  --code-faint: #444a5c;
+
+  --code-keyword: #c792ea;   /* const, def, import, return */
+  --code-function: #82aaff;  /* function names and calls */
+  --code-variable: #f0a07a;  /* identifiers */
+  --code-property: #89ddff;  /* obj.property, object and YAML keys */
+  --code-type: #ffcb6b;      /* classes and types */
+  --code-string: #c3e88d;    /* strings */
+  --code-number: #ff8f5c;    /* numbers, true, false, null */
+  --code-comment: #697590;   /* comments */
+  --code-meta: #f78c6c;      /* decorators, directives */
+  --code-accent: #ff7a3a;    /* ArmorIQ orange: active tab, selection edge */
+  --code-selection: #2b3350;
+}
